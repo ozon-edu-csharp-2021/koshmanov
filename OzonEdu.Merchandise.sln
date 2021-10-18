@@ -12,6 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AD5AE5F8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.Merchandise", "src\OzonEdu.Merchandise\OzonEdu.Merchandise.csproj", "{7984D94B-FC74-4420-A4B3-C641521B4C5B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{93F376E8-7D8A-4D19-B5B9-4D3E3538EB74}"
+ProjectSection(SolutionItems) = preProject
+	Dockerfile = Dockerfile
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
