@@ -2,7 +2,9 @@
 
 services: 
   merchandise-service:
-    build: .      
+    build: 
+      context: ../
+      dockerfile: Dockerfile
     hostname: 'merchandise-service'
     ports:
       - "8080:80"
