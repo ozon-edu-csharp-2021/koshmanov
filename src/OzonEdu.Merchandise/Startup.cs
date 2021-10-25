@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OzonEdu.Merchandise.Configuration.Middlewares;
 
 namespace OzonEdu.Merchandise
 {
@@ -21,8 +22,10 @@ namespace OzonEdu.Merchandise
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-          
-
+            app.Map("/version", builder => builder.UseMiddleware<VersionMiddleware>());
+            app.Map("/ready", builder => builder.UseMiddleware<CheckReadyMiddleware>());
+            app.Map("/live", builder => builder.UseMiddleware<CheckLiveMiddleware>());
+            app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
