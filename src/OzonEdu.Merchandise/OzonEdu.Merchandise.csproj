@@ -5,4 +5,12 @@
         <Version>1.0.0.1</Version>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OzonEdu.Merchandise.Infrastructure\OzonEdu.Merchandise.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

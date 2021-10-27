@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace OzonEdu.Merchandise.Configuration.Middlewares
+namespace OzonEdu.Merchandise.Infrastructure.Configuration.Middlewares
 {
     public class RequestLoggingMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<RequestLoggingMiddleware> _logger;
-
-
         public RequestLoggingMiddleware(RequestDelegate next, ILogger<RequestLoggingMiddleware> logger)
         {
             _next = next;
@@ -30,15 +26,28 @@ namespace OzonEdu.Merchandise.Configuration.Middlewares
         {
             try
             {
+                var requestLog = new StringBuilder();
+                requestLog.Append($"Method: {context.Request.Method};\n");
+                requestLog.Append($"Path: {context.Request.Path};\n");
+                requestLog.Append($"Scheme: {context.Request.Scheme};\n");
+                
+                if (context.Request.RouteValues.Count > 0)
+                {
+                    foreach (var routeKeyValue in (context.Request.RouteValues))
+                        requestLog.Append($"{routeKeyValue.Key}:{routeKeyValue.Value}\n");
+                }
+
                 if (context.Request.ContentLength > 0)
                 {
                     context.Request.EnableBuffering();
                     var buffer = new byte[context.Request.ContentLength.Value];
                     await context.Request.Body.ReadAsync(buffer, 0, buffer.Length);
-                    var bodyAsText = Encoding.UTF8.GetString(buffer);
-                    _logger.LogInformation($"Request Body: {bodyAsText}");
+                    var bodyAsString = Encoding.UTF8.GetString(buffer);
+                    requestLog.Append($"Request body: {bodyAsString}\n");
                     context.Request.Body.Position = 0;
                 }
+                _logger.LogInformation($"{requestLog}");
+                
             }
             catch (Exception e)
             {

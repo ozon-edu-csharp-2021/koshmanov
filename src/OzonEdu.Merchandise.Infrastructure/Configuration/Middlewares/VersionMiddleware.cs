@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace OzonEdu.Merchandise.Configuration.Middlewares
+namespace OzonEdu.Merchandise.Infrastructure.Configuration.Middlewares
 {
     public class VersionMiddleware
     {

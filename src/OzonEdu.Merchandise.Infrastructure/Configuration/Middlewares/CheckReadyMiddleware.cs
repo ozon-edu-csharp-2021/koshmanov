@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace OzonEdu.Merchandise.Configuration.Middlewares
+namespace OzonEdu.Merchandise.Infrastructure.Configuration.Middlewares
 {
     public class CheckReadyMiddleware
     {
