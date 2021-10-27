@@ -21,6 +21,9 @@ namespace OzonEdu.Merchandise.Infrastructure.Extensions
                 });
                 services.AddSingleton<IStartupFilter, MiddlewareStartupFilter>();
                 services.AddControllers(options => options.Filters.Add<GlobalExceptionFilter>());
+                services.AddGrpc();
+                services.AddSingleton<IStartupFilter, MerchGrpcStartupFilter>();
+
             });
             
             return builder;

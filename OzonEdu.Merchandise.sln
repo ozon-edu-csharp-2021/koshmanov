@@ -20,6 +20,8 @@ EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.Merchandise.Infrastructure", "src\OzonEdu.Merchandise.Infrastructure\OzonEdu.Merchandise.Infrastructure.csproj", "{A47FBF0C-56A5-468E-BBB4-CBFD5684F634}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.Merchandise.Grpc", "src\OzonEdu.Merchandise.Grpc\OzonEdu.Merchandise.Grpc.csproj", "{81218A00-93CA-416E-9901-961006128FD4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,9 +36,14 @@ Global
 		{A47FBF0C-56A5-468E-BBB4-CBFD5684F634}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A47FBF0C-56A5-468E-BBB4-CBFD5684F634}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A47FBF0C-56A5-468E-BBB4-CBFD5684F634}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81218A00-93CA-416E-9901-961006128FD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81218A00-93CA-416E-9901-961006128FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81218A00-93CA-416E-9901-961006128FD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81218A00-93CA-416E-9901-961006128FD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7984D94B-FC74-4420-A4B3-C641521B4C5B} = {99E12177-8982-409C-B1CD-F21F86EF80A1}
 		{A47FBF0C-56A5-468E-BBB4-CBFD5684F634} = {99E12177-8982-409C-B1CD-F21F86EF80A1}
+		{81218A00-93CA-416E-9901-961006128FD4} = {99E12177-8982-409C-B1CD-F21F86EF80A1}
 	EndGlobalSection
 EndGlobal

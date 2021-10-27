@@ -6,10 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\OzonEdu.Merchandise.Grpc\OzonEdu.Merchandise.Grpc.csproj" />
       <ProjectReference Include="..\OzonEdu.Merchandise.Infrastructure\OzonEdu.Merchandise.Infrastructure.csproj" />
     </ItemGroup>
 
