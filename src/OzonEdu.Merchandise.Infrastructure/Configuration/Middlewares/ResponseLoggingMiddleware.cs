@@ -19,8 +19,10 @@ namespace OzonEdu.Merchandise.Infrastructure.Configuration.Middlewares
         
         public async Task InvokeAsync(HttpContext context)
         {
-            await LogResponse(context);
-            //await _next(context);
+            if(context.Request.ContentType.Contains("grpc"))
+                await _next(context);
+            else
+                await LogResponse(context);
         }
 
         private async Task LogResponse(HttpContext context)

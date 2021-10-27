@@ -2,13 +2,26 @@
 option csharp_namespace = "OzonEdu.Merchandise.Grpc";
 package Merchandise;
 
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
 service MerchandiseGrpc{
     rpc GetMerch(GetMerchRequest) returns (GetMerchResponse);
+    rpc GetMerchV2(google.protobuf.Empty) returns (GetMerchResponse);
+    rpc GetMerchWithNulls(google.protobuf.Empty) returns (GetMerchResponseWithNulls);
+    rpc GetMerchOrderState(GetMerchOrderStateRequest) returns (GetMerchOrderStateResponse);
+
 }
 
-message GetMerchRequest{
-  
+message GetMerchResponseWithNulls{
+  repeated GetMerchResponseUnitWithNulls merch=1;
 }
+
+
+message  GetMerchRequest{
+ 
+}
+
 
 message  GetMerchResponse{
   repeated GetMerchResponseUnit merch=1;
@@ -17,4 +30,18 @@ message  GetMerchResponse{
 message GetMerchResponseUnit{
   int64 merch_id = 1;
   string  merch_name = 2;
+}
+
+message  GetMerchOrderStateRequest{
+    int64 id = 1;
+}
+
+message  GetMerchOrderStateResponse{
+  int64 id = 1;
+  string state =2;
+}
+
+message GetMerchResponseUnitWithNulls{
+  int64 merch_id = 1;
+  google.protobuf.StringValue  merch_name = 2;
 }

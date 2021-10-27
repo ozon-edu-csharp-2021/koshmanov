@@ -26,6 +26,8 @@ namespace OzonEdu.Merchandise.Infrastructure.Configuration.Middlewares
         {
             try
             {
+                if(context.Request.ContentType.Contains("grpc"))
+                    return;
                 var requestLog = new StringBuilder();
                 requestLog.Append($"Method: {context.Request.Method};\n");
                 requestLog.Append($"Path: {context.Request.Path};\n");
