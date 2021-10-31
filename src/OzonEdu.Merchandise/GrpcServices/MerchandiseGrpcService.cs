@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using OzonEdu.Merchandise.Grpc;
 using OzonEdu.Merchandise.Services.Interfaces;
+using OzonEdu.Merchandise.Models;
+using Employee = OzonEdu.Merchandise.Models.Employee;
 
 namespace OzonEdu.Merchandise.GrpcServices
 {
@@ -18,69 +21,42 @@ namespace OzonEdu.Merchandise.GrpcServices
             _merchandiseService = merchandiseService;
         }
 
-        public override async Task<GetMerchOrderStateResponse> GetMerchOrderState(GetMerchOrderStateRequest request, ServerCallContext context)
+        public override async Task<GetMerchOrderStateResponseGrpc> GetMerchOrderState(GetMerchOrderStateRequestGrpc request, ServerCallContext context)
         {
-            var merchOrderState = await _merchandiseService.GetMerchOrderState(request.Id, context.CancellationToken);
-            return new GetMerchOrderStateResponse
+            GetOrderStateRequest httpRequest = new GetOrderStateRequest(new MerchOrder
+                (1, new List<MerchItem>() {new MerchItem("T-shirt")}));
+            
+            var merchOrderState = await _merchandiseService.GetMerchOrderState(httpRequest, context.CancellationToken);
+            return new GetMerchOrderStateResponseGrpc()
             {
-                Id = merchOrderState.Id,
-                State = merchOrderState.Status
+                State = merchOrderState.Status == MerchOrderStatus.New? OrderState.New: 
+                        merchOrderState.Status == MerchOrderStatus.InProgress? OrderState.InProgress:
+                        merchOrderState.Status == MerchOrderStatus.GiveOut? OrderState.GiveOut:
+                        OrderState.Other
             };
         }
-
-        public override async Task<GetMerchResponse> GetMerchV2(Empty request, ServerCallContext context)
+        public override async Task<GetMerchResponseGrpc> GetMerch(GetMerchRequestGrpc request, ServerCallContext context)
         {
-            var merch = await _merchandiseService.GetMerch(context.CancellationToken);
-            return new GetMerchResponse
+            var httpRequest = new GetMerchRequest(
+                new Employee(request.Employee.Id, request.Employee.Name),
+                new MerchItem(request.Merch.Name)
+            );
+            var merch = await _merchandiseService.GetMerch(httpRequest , context.CancellationToken);
+            return new GetMerchResponseGrpc()
             {
-                Merch = {
-                    new GetMerchResponseUnit
-                    {
-                        MerchId = 1,
-                        MerchName = merch.Order
-                    }
-                }
-            };
-        }
-
-        public override async Task<GetMerchResponse> GetMerch(GetMerchRequest request, ServerCallContext context)
-        {
-            var merch = await _merchandiseService.GetMerch(context.CancellationToken);
-            return new GetMerchResponse
-            {
-                Merch = {
-                    new GetMerchResponseUnit
-                    {
-                        MerchId = 1,
-                        MerchName = merch.Order
-                    }
-                }
-            };
-        }
-
-        public override async Task<GetMerchResponseWithNulls> GetMerchWithNulls(Empty request, ServerCallContext context)
-        {
-            var merch = await _merchandiseService.GetMerch(context.CancellationToken);
-            return new GetMerchResponseWithNulls
-            {
-                Merch =
+                Merch = new MerchOrderUnit
                 {
-                    new List<GetMerchResponseUnitWithNulls>
+                    MerchOrderId = merch.Order.Id,
+                    Merch = new MerchUnit
                     {
-                        new GetMerchResponseUnitWithNulls
-                        {
-                            MerchId = 1,
-                            MerchName = merch.Order
-                        },
-                        new GetMerchResponseUnitWithNulls
-                        {
-                            MerchId = 2,
-                            MerchName = merch.Order
-                        }
-                    }
+                        Name = merch.Order.MerchItems.First().Name
+                    },
+                    State = merch.Order.Status == MerchOrderStatus.New? OrderState.New: 
+                            merch.Order.Status == MerchOrderStatus.InProgress? OrderState.InProgress:
+                            merch.Order.Status == MerchOrderStatus.GiveOut? OrderState.GiveOut:
+                            OrderState.Other
                 }
             };
-              
         }
     }
 }

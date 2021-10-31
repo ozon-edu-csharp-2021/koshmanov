@@ -8,16 +8,13 @@ namespace OzonEdu.Merchandise.Services
 {
     public class MerchandiseService: IMerchandiseService
     {
-        private readonly GetMerchResponseModel response = new GetMerchResponseModel("Order");
-        
-        
-        public Task<GetMerchResponseModel> GetMerch( CancellationToken _) =>Task.FromResult( response);
-        
-        
-        public Task<GetMerchOrderStateResponseModel> GetMerchOrderState(long id, CancellationToken _)
+        private readonly GetOrderStateResponse _orderStateResponse = new GetOrderStateResponse(MerchOrderStatus.Other);
+
+        public Task<GetMerchResponse> GetMerch(GetMerchRequest request, CancellationToken _)
         {
-            GetMerchOrderStateResponseModel responseStatus = new GetMerchOrderStateResponseModel(  id, "OrderBegin");
-            return Task.FromResult(responseStatus);
+            var response = new GetMerchResponse(new MerchOrder(1, new List<MerchItem>(){new MerchItem( request.MerchItem.Name) }));
+            return Task.FromResult( response);
         }
+        public Task<GetOrderStateResponse> GetMerchOrderState(GetOrderStateRequest id, CancellationToken _)=>Task.FromResult( _orderStateResponse);
     }
 }

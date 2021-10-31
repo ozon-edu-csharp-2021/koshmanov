@@ -6,42 +6,46 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
 
 service MerchandiseGrpc{
-    rpc GetMerch(GetMerchRequest) returns (GetMerchResponse);
-    rpc GetMerchV2(google.protobuf.Empty) returns (GetMerchResponse);
-    rpc GetMerchWithNulls(google.protobuf.Empty) returns (GetMerchResponseWithNulls);
-    rpc GetMerchOrderState(GetMerchOrderStateRequest) returns (GetMerchOrderStateResponse);
-
-}
-
-message GetMerchResponseWithNulls{
-  repeated GetMerchResponseUnitWithNulls merch=1;
+    rpc GetMerch(GetMerchRequestGrpc) returns (GetMerchResponseGrpc);
+    rpc GetMerchOrderState(GetMerchOrderStateRequestGrpc) returns (GetMerchOrderStateResponseGrpc);
 }
 
 
-message  GetMerchRequest{
- 
+message  GetMerchRequestGrpc{
+  MerchUnit merch=1;
+  Employee employee=2;
 }
 
-
-message  GetMerchResponse{
-  repeated GetMerchResponseUnit merch=1;
+message  GetMerchResponseGrpc{
+  MerchOrderUnit merch=1;
 }
 
-message GetMerchResponseUnit{
-  int64 merch_id = 1;
-  string  merch_name = 2;
+message  GetMerchOrderStateRequestGrpc{
+  MerchOrderUnit merch_order = 1;
 }
 
-message  GetMerchOrderStateRequest{
-    int64 id = 1;
+message  GetMerchOrderStateResponseGrpc{
+  OrderState state = 1;
 }
 
-message  GetMerchOrderStateResponse{
-  int64 id = 1;
-  string state =2;
+message MerchOrderUnit{
+  int64 merch_order_id = 1;
+  MerchUnit  merch = 2;
+  OrderState state = 3; 
 }
 
-message GetMerchResponseUnitWithNulls{
-  int64 merch_id = 1;
-  google.protobuf.StringValue  merch_name = 2;
+message MerchUnit{
+  string name =1;
+}
+
+message Employee{
+  int64 id =1;
+  string name=2;
+}
+
+enum OrderState{
+  NEW=0;
+  IN_PROGRESS=1;
+  GIVE_OUT=2;
+  OTHER=3;
 }

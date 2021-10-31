@@ -14,6 +14,7 @@ using OzonEdu.Merchandise.GrpcServices;
 using OzonEdu.Merchandise.Services;
 using OzonEdu.Merchandise.Services.Interfaces;
 
+
 namespace OzonEdu.Merchandise
 {
     public class Startup
@@ -22,8 +23,6 @@ namespace OzonEdu.Merchandise
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-           // services.AddControllers();
-            
             services.AddSingleton<MerchandiseGrpcService>();
             services.AddSingleton<IMerchandiseService, MerchandiseService>();
         }
@@ -31,25 +30,11 @@ namespace OzonEdu.Merchandise
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<MerchandiseGrpcService>();
                 endpoints.MapControllers();
             });
-        }
-        
-        public class SwaggerStartupFilter : IStartupFilter
-        {
-            public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
-            {
-                return app =>
-                {
-                    app.UseSwagger();
-                    app.UseSwaggerUI();
-                    next(app);
-                };
-            }
         }
     }
 }

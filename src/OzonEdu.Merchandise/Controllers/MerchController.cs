@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OzonEdu.Merchandise.Models;
@@ -17,21 +18,24 @@ namespace OzonEdu.Merchandise.Controllers
             _merchService = merchService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<GetMerchResponseModel>> GetMerch(
+        [HttpGet("{id:long}/{itemName}")]//
+        public async Task<ActionResult<GetMerchResponse>> GetMerch([FromRoute]long id, [FromRoute]string itemName,
             CancellationToken token)
         {
-            var merch = await _merchService.GetMerch( token);
+            var request = new GetMerchRequest(new Employee(id, "Bob"), new MerchItem(itemName));
+            var merch = await _merchService.GetMerch( request,token);
             if (merch is null)
                 return NotFound();
             return Ok(merch);
         }
         
-        [HttpGet("{id:long}")]
-        public async Task<ActionResult<GetMerchOrderStateResponseModel>> GetMerchGetMerchOrderState([FromQuery] long id ,
+        [HttpGet]
+        public async Task<ActionResult<GetOrderStateResponse>> GetMerchGetMerchOrderState([FromQuery] long id ,
             CancellationToken token)
-        {
-            var merch = await _merchService.GetMerchOrderState(id, token);
+        { 
+            var request = new GetOrderStateRequest( new MerchOrder(id, new List<MerchItem>()));
+
+            var merch = await _merchService.GetMerchOrderState(request, token);
             return merch;
         }
     }
