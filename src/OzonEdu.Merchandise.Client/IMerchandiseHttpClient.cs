@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using OzonEdu.Merchandise.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace OzonEdu.Merchandise.RestEase
+namespace OzonEdu.Merchandise.Client
 {
     public interface IMerchandiseHttpClient
     {

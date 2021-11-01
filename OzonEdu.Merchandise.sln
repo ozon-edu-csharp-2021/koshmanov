@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.Merchandise.HttpCli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.Merchandise.Models", "src\OzonEdu.Merchandise.Models\OzonEdu.Merchandise.Models.csproj", "{1D0B489D-AF57-43B9-8CD9-5637C26E2E46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.Merchandise.RestEase", "src\OzonEdu.Merchandise.RestEase\OzonEdu.Merchandise.RestEase.csproj", "{3B2A8D98-C987-4E45-B25F-761BDFB9E674}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.Merchandise.Client", "src\OzonEdu.Merchandise.Client\OzonEdu.Merchandise.Client.csproj", "{3B2A8D98-C987-4E45-B25F-761BDFB9E674}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
