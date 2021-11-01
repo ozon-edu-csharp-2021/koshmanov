@@ -1,0 +1,51 @@
+﻿syntax = 'proto3';
+option csharp_namespace = "OzonEdu.Merchandise.Grpc";
+package Merchandise;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+service MerchandiseGrpc{
+    rpc GetMerch(GetMerchRequestGrpc) returns (GetMerchResponseGrpc);
+    rpc GetMerchOrderState(GetMerchOrderStateRequestGrpc) returns (GetMerchOrderStateResponseGrpc);
+}
+
+
+message  GetMerchRequestGrpc{
+  MerchUnit merch=1;
+  Employee employee=2;
+}
+
+message  GetMerchResponseGrpc{
+  MerchOrderUnit merch=1;
+}
+
+message  GetMerchOrderStateRequestGrpc{
+  MerchOrderUnit merch_order = 1;
+}
+
+message  GetMerchOrderStateResponseGrpc{
+  OrderState state = 1;
+}
+
+message MerchOrderUnit{
+  int64 merch_order_id = 1;
+  MerchUnit  merch = 2;
+  OrderState state = 3; 
+}
+
+message MerchUnit{
+  string name =1;
+}
+
+message Employee{
+  int64 id =1;
+  string name=2;
+}
+
+enum OrderState{
+  NEW=0;
+  IN_PROGRESS=1;
+  GIVE_OUT=2;
+  OTHER=3;
+}
