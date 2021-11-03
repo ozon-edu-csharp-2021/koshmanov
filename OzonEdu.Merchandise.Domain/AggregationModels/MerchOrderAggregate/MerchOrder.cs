@@ -8,13 +8,14 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
 {
     public class MerchOrder:Entity
     {
-        public MerchOrder(Employee employee, List<MerchItem> merchItem, MerchManager merchManager, MerchType merchType)
+        public MerchOrder(Employee employee, List<MerchItem> merchItem, MerchManager merchManager, OrderState orderState, MerchType merchType)
         {
             Employee = employee;
             MerchItems = merchItem;
             MerchManager = merchManager;
-            CurrentOrderState =  OrderState.New;
-            PrevOrderState = CurrentOrderState;
+            //CurrentOrderState =  OrderState.New;
+            //CurrentOrderState = orderState;
+           // PrevOrderState = CurrentOrderState;
             MerchType = merchType;
             AddCreatedNewMerchOrderDomainEvent();
         }

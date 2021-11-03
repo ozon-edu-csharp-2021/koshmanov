@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\OzonEdu.Merchandise.Domain\OzonEdu.Merchandise.Domain.csproj" />
       <ProjectReference Include="..\OzonEdu.Merchandise.Grpc\OzonEdu.Merchandise.Grpc.csproj" />
     </ItemGroup>
 
