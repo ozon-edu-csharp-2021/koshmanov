@@ -1,18 +1,17 @@
-using System;
-using OzonEdu.Merchandise.Domain.AggregationModels.AddressAggregate;
+﻿using OzonEdu.Merchandise.Domain.AggregationModels.AddressAggregate;
 using Xunit;
 
 namespace OzonEdu.Merchandise.Domain.Tests.AddressAggregateTests
 {
-    public class CityValueObjectTest
+    public class DistrictValueObjectTests
     {
         [Fact]
-        public void CreationCityInstanceSuccess()
+        public void CreationDistrictInstanceSuccess()
         {
             //Arrange
             var cityName = "Moscow";
             //Action
-            var res = new City("Moscow");
+            var res = new District("Moscow");
             //Assert
             Assert.Equal(cityName, res.Value);
         }

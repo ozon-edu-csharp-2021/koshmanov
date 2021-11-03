@@ -1,6 +1,6 @@
 ﻿using OzonEdu.Merchandise.Domain.Models;
 
-namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
+namespace OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate
 {
     public class WorkFormat:Enumeration
     {
