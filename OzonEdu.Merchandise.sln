@@ -26,6 +26,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.Merchandise.Models"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.Merchandise.Client", "src\OzonEdu.Merchandise.Client\OzonEdu.Merchandise.Client.csproj", "{3B2A8D98-C987-4E45-B25F-761BDFB9E674}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.Merchandise.Domain", "OzonEdu.Merchandise.Domain\OzonEdu.Merchandise.Domain.csproj", "{B0055079-60C5-4673-BAA9-AF1FA820F947}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.Merchandise.Domain.Tests", "tests\OzonEdu.Merchandise.Domain.Tests\OzonEdu.Merchandise.Domain.Tests.csproj", "{4FC4FB0D-6F52-40F1-BCBA-8A84E3A71AD4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +56,14 @@ Global
 		{3B2A8D98-C987-4E45-B25F-761BDFB9E674}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B2A8D98-C987-4E45-B25F-761BDFB9E674}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B2A8D98-C987-4E45-B25F-761BDFB9E674}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0055079-60C5-4673-BAA9-AF1FA820F947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0055079-60C5-4673-BAA9-AF1FA820F947}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0055079-60C5-4673-BAA9-AF1FA820F947}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0055079-60C5-4673-BAA9-AF1FA820F947}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FC4FB0D-6F52-40F1-BCBA-8A84E3A71AD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FC4FB0D-6F52-40F1-BCBA-8A84E3A71AD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FC4FB0D-6F52-40F1-BCBA-8A84E3A71AD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC4FB0D-6F52-40F1-BCBA-8A84E3A71AD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7984D94B-FC74-4420-A4B3-C641521B4C5B} = {99E12177-8982-409C-B1CD-F21F86EF80A1}
@@ -59,5 +71,7 @@ Global
 		{81218A00-93CA-416E-9901-961006128FD4} = {99E12177-8982-409C-B1CD-F21F86EF80A1}
 		{1D0B489D-AF57-43B9-8CD9-5637C26E2E46} = {99E12177-8982-409C-B1CD-F21F86EF80A1}
 		{3B2A8D98-C987-4E45-B25F-761BDFB9E674} = {99E12177-8982-409C-B1CD-F21F86EF80A1}
+		{B0055079-60C5-4673-BAA9-AF1FA820F947} = {99E12177-8982-409C-B1CD-F21F86EF80A1}
+		{4FC4FB0D-6F52-40F1-BCBA-8A84E3A71AD4} = {AD5AE5F8-A9F1-4E71-AA3D-9E50AA933D77}
 	EndGlobalSection
 EndGlobal
