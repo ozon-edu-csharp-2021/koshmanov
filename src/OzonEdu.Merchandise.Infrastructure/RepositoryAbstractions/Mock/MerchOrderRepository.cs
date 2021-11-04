@@ -1,32 +1,38 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
-using OzonEdu.Merchandise.Infrastructure.RepositoryAbstractions.Interfaces;
+using OzonEdu.Merchandise.Domain.Contracts;
+
 
 namespace OzonEdu.Merchandise.Infrastructure.RepositoryAbstractions.Mock
 {
     public class MerchOrderRepository:IMerchOrderRepository
     {
-        public void SetStorageContext(IStorageContext storageContext)
-        {
-         
-        }
 
-        public IEnumerable<MerchOrder> All()
+
+        public IUnitOfWork UnitOfWork { get; }
+        public Task<MerchOrder> CreateAsync(MerchOrder merchOrder, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }
 
-        public MerchOrder GetMerchOrderById(long id)
+        public Task<MerchOrder> UpdateAsync(MerchOrder merchOrder, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }
 
-        public bool SaveNewMerchOrderDomainEvent(MerchOrder order)
+        public Task<MerchOrder> FindById(long id, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }
 
-        public OrderState CheckOrderState(MerchOrder order)
+        public Task<MerchOrder> FindById(long id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<MerchOrder> CheckOrderState(MerchOrder order)
         {
             throw new System.NotImplementedException();
         }

@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
@@ -20,6 +21,10 @@
     <ItemGroup>
       <ProjectReference Include="..\..\OzonEdu.Merchandise.Domain\OzonEdu.Merchandise.Domain.csproj" />
       <ProjectReference Include="..\OzonEdu.Merchandise.Grpc\OzonEdu.Merchandise.Grpc.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Queries" />
     </ItemGroup>
 
 </Project>
