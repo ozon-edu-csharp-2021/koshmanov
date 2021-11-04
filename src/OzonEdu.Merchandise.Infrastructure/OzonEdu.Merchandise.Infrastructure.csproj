@@ -26,5 +26,4 @@
     <ItemGroup>
       <Folder Include="Queries" />
     </ItemGroup>
-
 </Project>

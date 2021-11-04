@@ -24,6 +24,7 @@ namespace OzonEdu.Merchandise.Infrastructure.Extensions
                 });
                 services.AddGrpc(options=> options.Interceptors.Add<LoggingInterceptor>());
                 services.AddSingleton<IStartupFilter, MiddlewareStartupFilter>();
+
             });
             
             return builder;

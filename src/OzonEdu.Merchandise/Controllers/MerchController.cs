@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OzonEdu.Merchandise.Infrastructure.Commands.CreateMerchOrder;
 using OzonEdu.Merchandise.Infrastructure.Commands.FindById;
 using OzonEdu.Merchandise.Infrastructure.Handlers;
+using Microsoft.AspNetCore.Mvc;
 using OzonEdu.Merchandise.Models;
 using OzonEdu.Merchandise.Services.Interfaces;
 
@@ -27,7 +29,7 @@ namespace OzonEdu.Merchandise.Controllers
         [HttpGet("{id:long}/{itemName}")]//
         public async Task<ActionResult<GetMerchResponse>> GetMerch([FromRoute]long id, [FromRoute]string itemName,
             CancellationToken token)
-        {;
+        {
             var request = new GetMerchRequest(new Employee(id, "Bob"), new MerchItem(itemName));
             var merch = await _merchService.GetMerch( request,token);
             if (merch is null)
@@ -57,7 +59,5 @@ namespace OzonEdu.Merchandise.Controllers
             var merch = await _merchService.GetMerchOrderState(request, token);
             return merch;
         }
-        
-        
     }
 }
