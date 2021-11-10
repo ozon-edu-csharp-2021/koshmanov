@@ -1,132 +1,230 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoFixture;
-using OzonEdu.Merchandise.Domain.AggregationModels.AddressAggregate;
 using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
-using OzonEdu.Merchandise.Domain.AggregationModels.NamesAggregate;
 using OzonEdu.Merchandise.Domain.Exceptions;
 using Xunit;
 
 namespace OzonEdu.Merchandise.Domain.Tests.MerchOrderAggregateTests
 {
-    public class CityValueObjectTest
+    public class MerchOrderValueObjectTest
     {
-        [Fact]
-        public void CreationCityInstanceSuccess()
-        {
-            //Arrange
 
-            //Action
-
-            //Assert
-
-        }
-        
         [Fact]
         public void UpdateNewOrderStateSuccess()
         {
-            var newMerchOrder = new Fixture().Build<MerchOrder>()
-                .With(x => x.CurrentOrderState, OrderState.New)
-                .Create();
-            //Arrange
-           
-            var newOrderState = OrderState.Completed;
-            //Action
+            var employee = new Fixture().Build<Employee>().Create();
+            MerchOrder merchOrder;
 
-            //Assert
-            Assert.Throws<Exception>(() => newMerchOrder.UpdateOrderState(newOrderState));
+            var list = new List<OrderState>()
+            {
+                OrderState.Canceled,
+                OrderState.Waiting,
+                OrderState.InProgress
+            };
+            //Arrange
+            
+            list.ForEach(x =>
+            {
+                merchOrder = new MerchOrder(employee, MerchPack.WelcomePack, OrderState.New);
+                //Action
+                merchOrder.UpdateOrderState(x);
+                
+                //Assert
+                Assert.Equal(x, merchOrder.CurrentOrderState);
+            }); 
+        }
+        
+        [Fact]
+        public void UpdateNewOrderStateExceptionSuccess()
+        {
+            var employee = new Fixture().Build<Employee>().Create();
+            var merchOrder = new MerchOrder(employee, MerchPack.WelcomePack, OrderState.New);;
+
+            var list = new List<OrderState>()
+            {
+                OrderState.New,
+                OrderState.Completed,
+                OrderState.GiveOut
+            };
+            
+            list.ForEach(x =>
+            {
+                Assert.Throws<WrongOrderStateValueException>(()=>merchOrder.UpdateOrderState(x));
+            }); 
         }
         
         [Fact]
         public void UpdateInProgressOrderStateSuccess()
         {
-            var inProgressMerchOrder = new Fixture().Build<MerchOrder>()
-                .With(x => x.CurrentOrderState, OrderState.InProgress)
-                .Create();
-            //Arrange
-           
-            var newOrderState = OrderState.Completed;
-            //Action
+            var employee = new Fixture().Build<Employee>().Create();
+            MerchOrder merchOrder;
 
-            //Assert
-            Assert.Throws<Exception>(() => inProgressMerchOrder.UpdateOrderState(newOrderState));
+            var list = new List<OrderState>()
+            {
+                OrderState.Canceled,
+                OrderState.GiveOut
+            };
+            list.ForEach(x =>
+            {
+                merchOrder = new MerchOrder(employee, MerchPack.WelcomePack, OrderState.InProgress);
+                merchOrder.UpdateOrderState(x);
+                Assert.Equal(x, merchOrder.CurrentOrderState);
+            }); 
         }
         
         [Fact]
-        public void UpdateCanceledOrderStateSuccess()
+        public void UpdateInProgressOrderStateExceptionSuccess()
         {
-            var canceledMerchOrder = new Fixture().Build<MerchOrder>()
-                .With(x => x.CurrentOrderState, OrderState.Canceled)
-                .Create(); 
-            //Arrange
-           
-            var newOrderState = OrderState.Completed;
-            //Action
+            var employee = new Fixture().Build<Employee>().Create();
+            var merchOrder = new MerchOrder(employee, MerchPack.WelcomePack, OrderState.InProgress);;
 
-            //Assert
-            Assert.Throws<Exception>(() => canceledMerchOrder.UpdateOrderState(newOrderState));
+            var list = new List<OrderState>()
+            {
+                OrderState.InProgress,
+                OrderState.Completed,
+                OrderState.Waiting,
+                OrderState.New
+            };
+            
+            list.ForEach(x =>
+            {
+                Assert.Throws<WrongOrderStateValueException>(()=>merchOrder.UpdateOrderState(x));
+            }); 
         }
         
         [Fact]
         public void UpdateWaitingOrderStateSuccess()
         {
-            var waitingMerchOrder = new Fixture().Build<MerchOrder>()
-                .With(x => x.CurrentOrderState, OrderState.Waiting)
-                .Create();
-            
-            //Arrange
-           
-            var newOrderState = OrderState.Completed;
-            //Action
+            var employee = new Fixture().Build<Employee>().Create();
+            MerchOrder merchOrder;
 
-            //Assert
-            Assert.Throws<Exception>(() => waitingMerchOrder.UpdateOrderState(newOrderState));
+            var list = new List<OrderState>()
+            {
+                OrderState.Canceled,
+                OrderState.InProgress
+            };
+            list.ForEach(x =>
+            {
+                merchOrder = new MerchOrder(employee, MerchPack.WelcomePack, OrderState.Waiting);
+                merchOrder.UpdateOrderState(x);
+                Assert.Equal(x, merchOrder.CurrentOrderState);
+            }); 
         }
         
-        [Theory]
-        [MemberData(nameof(GetOrderStateListWithoutCompleted))]
-        public void UpdateGiveOutOrderStateSuccess(List<OrderState> list)
+        [Fact]
+        public void UpdateWaitingOrderStateExceptionSuccess()
         {
             var employee = new Fixture().Build<Employee>().Create();
-            var merchItem = new Fixture().Build<MerchItem>().Create();
-            var merchManager = new Fixture().Build<MerchManager>().Create();
-            var itemList = new List<MerchItem>(){merchItem};
-            var merchOrder = new MerchOrder(employee, itemList, merchManager, OrderState.GiveOut, MerchPackType.Greeting); 
-            
-            //giveOutMerchOrder.Customize<MerchOrder>(x => x.FromFactory(() => merchOrder), .Build<MerchOrder>() );
-        
-            //Arrange
-           
-            //var newOrderState = OrderState.Completed;
-            //Action
+            var merchOrder = new MerchOrder(employee, MerchPack.WelcomePack, OrderState.Waiting);;
 
-            //Assert
-            list.ForEach(x=> Assert.Throws<Exception>(() =>merchOrder.UpdateOrderState(x)));
+            var list = new List<OrderState>()
+            {
+                OrderState.Waiting,
+                OrderState.Completed,
+                OrderState.GiveOut,
+                OrderState.New
+            };
+            
+            list.ForEach(x =>
+            {
+                Assert.Throws<WrongOrderStateValueException>(()=>merchOrder.UpdateOrderState(x));
+            }); 
+        }
+        
+        [Fact]
+        public void UpdateGiveOutOrderStateSuccess()
+        {
+            var employee = new Fixture().Build<Employee>().Create();
+            MerchOrder merchOrder;
+
+            var list = new List<OrderState>()
+            {
+                OrderState.Completed
+            };
+            list.ForEach(x =>
+            {
+                merchOrder = new MerchOrder(employee, MerchPack.WelcomePack, OrderState.GiveOut);
+                merchOrder.UpdateOrderState(x);
+                Assert.Equal(x, merchOrder.CurrentOrderState);
+            }); 
+        }
+        
+        [Fact]
+        public void UpdateGiveOutOrderStateExceptionSuccess()
+        {
+            var employee = new Fixture().Build<Employee>().Create();
+            var merchOrder = new MerchOrder(employee, MerchPack.WelcomePack, OrderState.GiveOut);
+            var list = new List<OrderState>()
+            {
+                OrderState.Waiting,
+                OrderState.InProgress,
+                OrderState.GiveOut,
+                OrderState.New,
+                OrderState.Canceled
+            };
+            
+            list.ForEach(x =>
+            {
+                Assert.Throws<WrongOrderStateValueException>(()=>merchOrder.UpdateOrderState(x));
+            }); 
+        }
+        
+        [Fact]
+        public void UpdateCanceledOrderStateSuccess()
+        {
+            var employee = new Fixture().Build<Employee>().Create();
+            MerchOrder merchOrder;
+            var list = new List<OrderState>()
+            {
+                OrderState.Completed
+            };
+            
+            list.ForEach(x =>
+            {
+                merchOrder = new MerchOrder(employee, MerchPack.WelcomePack, OrderState.Canceled);
+                merchOrder.UpdateOrderState(x);
+                Assert.Equal(x, merchOrder.CurrentOrderState);
+            }); 
+        }
+        
+        [Fact]
+        public void UpdateCanceledOrderStateExceptionSuccess()
+        {
+            var employee = new Fixture().Build<Employee>().Create();
+            var merchOrder = new MerchOrder(employee, MerchPack.WelcomePack, OrderState.Canceled);
+            var list = new List<OrderState>()
+            {
+                OrderState.Waiting,
+                OrderState.InProgress,
+                OrderState.GiveOut,
+                OrderState.New,
+                OrderState.Canceled
+            };
+            list.ForEach(x =>
+            {
+                Assert.Throws<WrongOrderStateValueException>(()=>merchOrder.UpdateOrderState(x));
+            }); 
         }
         
         [Theory]
         [MemberData(nameof(GetOrderStateList))]
         public void UpdateCompletedOrderStateSuccess(List<OrderState> list)
         {
-            //Arrange
             var employee = new Fixture().Build<Employee>().Create();
-            var merchItem = new Fixture().Build<MerchItem>().Create();
-            var merchManager = new Fixture().Build<MerchManager>().Create();
-            var itemList = new List<MerchItem>(){merchItem};
-            var merchOrder = new MerchOrder(employee, itemList, merchManager, OrderState.Completed, MerchPackType.Greeting); 
+            var merchOrder = new MerchOrder(employee, MerchPack.WelcomePack, OrderState.Completed);
+            
+            list.ForEach(x=> Assert.Throws<WrongOrderStateValueException>(() =>merchOrder.UpdateOrderState(x)));
+        }
 
-            //Action
+        [Fact]
+        public void UpdateNullOrderStateExceptionSuccess()
+        {
+            var employee = new Fixture().Build<Employee>().Create();
+            var merchOrder = new MerchOrder(employee, MerchPack.WelcomePack, OrderState.New);
 
-            //Assert
-            string it;
-            foreach (var state in list)
-            {
-                if (state == OrderState.Completed)
-                     it = "";
-                Assert.Throws<Exception>(() => merchOrder.UpdateOrderState(state));
-            }
-           //list.ForEach(x=> Assert.Throws<Exception>(() =>merchOrder.UpdateOrderState(x)));
+            Assert.Throws<ArgumentNullException>(() => merchOrder.UpdateOrderState(null));
         }
 
         public static IEnumerable<object[]> GetOrderStateList()
@@ -136,8 +234,8 @@ namespace OzonEdu.Merchandise.Domain.Tests.MerchOrderAggregateTests
                 new List<OrderState>()
                 {
                     OrderState.Canceled, OrderState.New, 
-                    OrderState.Other, OrderState.Waiting,
-                    OrderState.GiveOut, OrderState.InProgress, OrderState.Completed
+                    OrderState.Waiting, OrderState.GiveOut,
+                    OrderState.InProgress, OrderState.Completed
                 }
             };
         }
@@ -149,8 +247,7 @@ namespace OzonEdu.Merchandise.Domain.Tests.MerchOrderAggregateTests
             {
                 new List<OrderState>()
                 {
-                    OrderState.Canceled, OrderState.New, 
-                    OrderState.Other, OrderState.Waiting,
+                    OrderState.Canceled, OrderState.New, OrderState.Waiting,
                     OrderState.GiveOut, OrderState.InProgress
                 }
             };

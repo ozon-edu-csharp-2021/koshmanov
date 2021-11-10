@@ -24,20 +24,21 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
         /// <summary>
         /// При каждом состоянии своё событие и бизнес логика. 
         /// </summary>
-        /// <param name="newState"></param>
         public void UpdateOrderState(OrderState newState)
         {
-            if (CurrentOrderState!=newState)
+            if (newState == null)
+                throw new ArgumentNullException();
+            if (!Equals(CurrentOrderState, newState))
             {
-                if (CurrentOrderState==OrderState.Completed)
+                if (Equals(CurrentOrderState, OrderState.Completed))
                 {
                     ThrowWrongStateException(newState);
                 }
-                else if (CurrentOrderState==OrderState.New)
+                else if (Equals(CurrentOrderState, OrderState.New))
                 {
-                    if (newState==OrderState.InProgress||
-                        newState==OrderState.Waiting||
-                        newState==OrderState.Canceled)
+                    if (Equals(newState, OrderState.InProgress)||
+                        Equals(newState, OrderState.Waiting)||
+                        Equals(newState, OrderState.Canceled))
                     {
                         CurrentOrderState = newState;
                         AddMerchOrderStatusChangedDomainEvent();
@@ -46,11 +47,10 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
                     {
                         ThrowWrongStateException(newState);
                     }
-                }else if (CurrentOrderState==OrderState.InProgress)
+                }else if (Equals(CurrentOrderState, OrderState.InProgress))
                 {
-                    if (newState==OrderState.GiveOut||
-                        newState==OrderState.Waiting||
-                        newState==OrderState.Canceled)
+                    if (Equals(newState, OrderState.GiveOut)||
+                        Equals(newState, OrderState.Canceled))
                     {
                         CurrentOrderState = newState;
                         AddMerchOrderStatusChangedDomainEvent();
@@ -60,9 +60,9 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
                         ThrowWrongStateException(newState);
                     }
                 }
-                else if (CurrentOrderState==OrderState.GiveOut)
+                else if (Equals(CurrentOrderState, OrderState.GiveOut))
                 {
-                    if (newState==OrderState.Completed)
+                    if (Equals(newState, OrderState.Completed))
                     {
                         CurrentOrderState = newState;
                         AddMerchOrderStatusChangedDomainEvent();
@@ -71,9 +71,9 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
                     {
                         ThrowWrongStateException(newState);
                     }
-                }else if (CurrentOrderState==OrderState.Canceled)
+                }else if (Equals(CurrentOrderState, OrderState.Canceled))
                 {
-                    if (newState==OrderState.Completed)
+                    if (Equals(newState, OrderState.Completed))
                     {
                         CurrentOrderState = newState;
                         AddMerchOrderStatusChangedDomainEvent();
@@ -82,10 +82,10 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
                     {
                         ThrowWrongStateException(newState);
                     }
-                }else if (CurrentOrderState==OrderState.Waiting)
+                }else if (Equals(CurrentOrderState, OrderState.Waiting))
                 {
-                    if (newState==OrderState.InProgress||
-                        newState==OrderState.Canceled)
+                    if (Equals(newState, OrderState.InProgress)||
+                        Equals(newState, OrderState.Canceled))
                     {
                         CurrentOrderState = newState;
                         AddMerchOrderStatusChangedDomainEvent();
@@ -102,23 +102,20 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
 
         private void ThrowWrongStateException(OrderState newState)
         {
-            throw new WrongOrderStateValueException($"Incorrect new state value {newState.Name} "+
-                                $"{(string.IsNullOrEmpty(newState.Description)?".":"Description "+newState.Description)}. "+
-                                $"Current state {CurrentOrderState.Name}; "+
-                                $"{(string.IsNullOrEmpty(CurrentOrderState.Description)?".":"Description "+CurrentOrderState.Description)}. ");
+            throw new WrongOrderStateValueException($"Incorrect new state value {newState.Name} " +
+                                                    $"Current state {CurrentOrderState.Name}; ");
         }
 
         private void AddCreatedNewMerchOrderDomainEvent()
         {
-            var orderCreatedDE = new CreatedNewMerchOrderDomainEvent(this);
-            
-            AddDomainEvent(orderCreatedDE);
+            var orderCreatedDe = new CreatedNewMerchOrderDomainEvent(this);
+            AddDomainEvent(orderCreatedDe);
         }
         
         private void AddMerchOrderStatusChangedDomainEvent()
         {
             var merchOrderStatusChangedDomainEvent = new MerchOrderStatusChangedDomainEvent(this);
-            this.AddDomainEvent(merchOrderStatusChangedDomainEvent);
+            AddDomainEvent(merchOrderStatusChangedDomainEvent);
         }
     }
 }
