@@ -3,13 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.Merchandise.Infrastructure.Commands.CreateMerchOrder;
 using OzonEdu.Merchandise.Infrastructure.Queries.FindById;
-using OzonEdu.Merchandise.Infrastructure.Handlers;
 using OzonEdu.Merchandise.Models;
 using OzonEdu.Merchandise.Services.Interfaces;
-using Employee = OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate.Employee;
+
 
 namespace OzonEdu.Merchandise.Controllers 
 {
