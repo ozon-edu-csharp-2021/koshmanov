@@ -3,11 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.Merchandise.Infrastructure.Commands.CreateMerchOrder;
-using OzonEdu.Merchandise.Infrastructure.Commands.FindById;
+using OzonEdu.Merchandise.Infrastructure.Queries.FindById;
 using OzonEdu.Merchandise.Infrastructure.Handlers;
 using OzonEdu.Merchandise.Models;
 using OzonEdu.Merchandise.Services.Interfaces;
+using Employee = OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate.Employee;
 
 namespace OzonEdu.Merchandise.Controllers 
 {
@@ -24,26 +26,28 @@ namespace OzonEdu.Merchandise.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("{id:long}/{itemName}")]//
-        public async Task<ActionResult<GetMerchResponse>> GetMerch([FromRoute]long id, [FromRoute]string itemName,
+        [HttpGet("{id:long}/{merchId:int}")]//
+        public async Task<ActionResult<GetMerchResponse>> GetMerch([FromRoute]long id, [FromRoute]int merchId,
             CancellationToken token)
         {;
-            var request = new GetMerchRequest(new Employee(id, "Bob"), new MerchItem(itemName));
-            var merch = await _merchService.GetMerch( request,token);
-            if (merch is null)
-                return NotFound();
-            return Ok(merch);
+            CreateMerchOrderCommand createCommand = new CreateMerchOrderCommand()
+            {
+                EmloyeeId = id,
+                MerchPackType = merchId
+            };
+            var result = await _mediator.Send(createCommand);
+            return Ok(result);
         }
         
         [HttpGet("{id:long}")]//
         public async Task<ActionResult<GetMerchResponse>> GetMerchOrderById([FromRoute]long id,
             CancellationToken token)
         {
-            FindMerchOrderByIdCommand findCommand = new FindMerchOrderByIdCommand()
+            FindMerchOrderByIdQuery findQuery = new FindMerchOrderByIdQuery()
             {
                 Id = id
             };
-            var res = await _mediator.Send(findCommand, token);
+            var res = await _mediator.Send(findQuery, token);
      
             return Ok(res);
         }

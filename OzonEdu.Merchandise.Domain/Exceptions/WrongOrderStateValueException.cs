@@ -4,9 +4,7 @@ namespace OzonEdu.Merchandise.Domain.Exceptions
 {
     public class WrongOrderStateValueException : Exception
     {
-        public WrongOrderStateValueException(string message):base(message)
-        {
-            
-        }
+        public WrongOrderStateValueException(string message) : base(message){}
+
     }
 }

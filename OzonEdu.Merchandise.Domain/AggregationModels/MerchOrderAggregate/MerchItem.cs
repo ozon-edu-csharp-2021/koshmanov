@@ -4,19 +4,16 @@ using OzonEdu.Merchandise.Domain.Models;
 
 namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
 {
-    public class MerchItem : ValueObject
+    public class MerchItem : Entity
     {
-        public MerchItem(MerchType merchType, MerchItemName name)
+        public MerchItem(MerchItemName merchItemName, Sku sku)
         {
-            MerchType = merchType;
-            MerchItemName = name;
+            MerchItemName = merchItemName;
+            Sku = sku;
         }
-        public MerchType MerchType { get; set; }
-        public MerchItemName MerchItemName { get; set; }
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return MerchType;
-            yield return MerchItemName;
-        }
+        public MerchItemName MerchItemName { get; }
+        
+        public Sku Sku { get; }
+        
     }
 }

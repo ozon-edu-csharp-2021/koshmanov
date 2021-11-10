@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
 using OzonEdu.Merchandise.Domain.Contracts;
 
@@ -33,6 +34,11 @@ namespace OzonEdu.Merchandise.Infrastructure.RepositoryAbstractions.Mock
         }
 
         public Task<MerchOrder> CheckOrderState(MerchOrder order)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<bool> CheckEmployeeMerch(Employee employee, MerchPack merchPack)
         {
             throw new System.NotImplementedException();
         }

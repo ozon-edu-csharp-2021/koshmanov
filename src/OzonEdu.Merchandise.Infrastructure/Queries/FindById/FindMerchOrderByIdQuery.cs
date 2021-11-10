@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
 
-namespace OzonEdu.Merchandise.Infrastructure.Commands.FindById
+namespace OzonEdu.Merchandise.Infrastructure.Queries.FindById
 {
-    public class FindMerchOrderByIdCommand:IRequest<MerchOrder>
+    public class FindMerchOrderByIdQuery:IRequest<MerchOrder>
     {
         public long Id { get; set; }
     }

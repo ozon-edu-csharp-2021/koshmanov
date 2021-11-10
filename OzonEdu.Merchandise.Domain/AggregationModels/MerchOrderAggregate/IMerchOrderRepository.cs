@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
 using OzonEdu.Merchandise.Domain.Contracts;
 using OzonEdu.Merchandise.Domain.Events;
@@ -14,5 +15,6 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
         Task<MerchOrder> UpdateAsync(MerchOrder merchOrder, CancellationToken cancellationToken = default);
         Task<MerchOrder> FindById(long id, CancellationToken cancellationToken = default);
         Task<MerchOrder> CheckOrderState(MerchOrder order);
+        Task<bool> CheckEmployeeMerch(Employee employee, MerchPack merchPack);
     }
 }

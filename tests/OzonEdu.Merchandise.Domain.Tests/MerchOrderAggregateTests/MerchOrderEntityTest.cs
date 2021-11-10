@@ -84,20 +84,25 @@ namespace OzonEdu.Merchandise.Domain.Tests.MerchOrderAggregateTests
             Assert.Throws<Exception>(() => waitingMerchOrder.UpdateOrderState(newOrderState));
         }
         
-        [Fact]
-        public void UpdateGiveOutOrderStateSuccess()
+        [Theory]
+        [MemberData(nameof(GetOrderStateListWithoutCompleted))]
+        public void UpdateGiveOutOrderStateSuccess(List<OrderState> list)
         {
-            var giveOutMerchOrder = new Fixture().Build<MerchOrder>()
-                .With(x => x.CurrentOrderState, OrderState.GiveOut)
-                .Create();
+            var employee = new Fixture().Build<Employee>().Create();
+            var merchItem = new Fixture().Build<MerchItem>().Create();
+            var merchManager = new Fixture().Build<MerchManager>().Create();
+            var itemList = new List<MerchItem>(){merchItem};
+            var merchOrder = new MerchOrder(employee, itemList, merchManager, OrderState.GiveOut, MerchPackType.Greeting); 
+            
+            //giveOutMerchOrder.Customize<MerchOrder>(x => x.FromFactory(() => merchOrder), .Build<MerchOrder>() );
         
             //Arrange
            
-            var newOrderState = OrderState.Completed;
+            //var newOrderState = OrderState.Completed;
             //Action
 
             //Assert
-            Assert.Throws<Exception>(() => giveOutMerchOrder.UpdateOrderState(newOrderState));
+            list.ForEach(x=> Assert.Throws<Exception>(() =>merchOrder.UpdateOrderState(x)));
         }
         
         [Theory]
@@ -105,14 +110,23 @@ namespace OzonEdu.Merchandise.Domain.Tests.MerchOrderAggregateTests
         public void UpdateCompletedOrderStateSuccess(List<OrderState> list)
         {
             //Arrange
-            var completedMerchOrder = new Fixture().Build<MerchOrder>()
-                .With(x => x.CurrentOrderState, OrderState.Completed)
-                .Create();
-           
+            var employee = new Fixture().Build<Employee>().Create();
+            var merchItem = new Fixture().Build<MerchItem>().Create();
+            var merchManager = new Fixture().Build<MerchManager>().Create();
+            var itemList = new List<MerchItem>(){merchItem};
+            var merchOrder = new MerchOrder(employee, itemList, merchManager, OrderState.Completed, MerchPackType.Greeting); 
+
             //Action
 
             //Assert
-           list.ForEach(x=> Assert.Throws<Exception>(() =>completedMerchOrder.UpdateOrderState(x)));
+            string it;
+            foreach (var state in list)
+            {
+                if (state == OrderState.Completed)
+                     it = "";
+                Assert.Throws<Exception>(() => merchOrder.UpdateOrderState(state));
+            }
+           //list.ForEach(x=> Assert.Throws<Exception>(() =>merchOrder.UpdateOrderState(x)));
         }
 
         public static IEnumerable<object[]> GetOrderStateList()
@@ -121,7 +135,21 @@ namespace OzonEdu.Merchandise.Domain.Tests.MerchOrderAggregateTests
             {
                 new List<OrderState>()
                 {
-                    OrderState.Canceled, OrderState.Completed, OrderState.New, 
+                    OrderState.Canceled, OrderState.New, 
+                    OrderState.Other, OrderState.Waiting,
+                    OrderState.GiveOut, OrderState.InProgress, OrderState.Completed
+                }
+            };
+        }
+        
+        
+        public static IEnumerable<object[]> GetOrderStateListWithoutCompleted()
+        {
+            yield return new object[]
+            {
+                new List<OrderState>()
+                {
+                    OrderState.Canceled, OrderState.New, 
                     OrderState.Other, OrderState.Waiting,
                     OrderState.GiveOut, OrderState.InProgress
                 }

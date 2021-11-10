@@ -7,9 +7,8 @@ namespace OzonEdu.Merchandise.Infrastructure.Commands.CreateMerchOrder
 {
     public class CreateMerchOrderCommand:IRequest<int>
     {
-        public Employee Emloyee { get; set; }
-        public List<MerchItem> ItemList { get; set; }
-        
-        public MerchManager MerchManager { get; set; }
+        public long EmloyeeId { get; set; }
+
+        public int MerchPackType { get; set; }
     }
 }
