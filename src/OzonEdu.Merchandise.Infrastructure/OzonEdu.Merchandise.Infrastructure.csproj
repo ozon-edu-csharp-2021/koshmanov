@@ -26,5 +26,6 @@
 
     <ItemGroup>
       <Folder Include="Queries" />
+      <Folder Include="RepositoryAbstractions\Mock" />
     </ItemGroup>
 </Project>
