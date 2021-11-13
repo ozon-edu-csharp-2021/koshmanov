@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using OzonEdu.Merchandise.Domain.Models;
 
-namespace OzonEdu.Merchandise.Domain.AggregationModels.NamesAggregate
+namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
 {
-    public class SecondName:ValueObject
+    public class EmployeeId: ValueObject
     {
-        public SecondName(string value)
+        public long Value { get; }
+
+        public EmployeeId(long value)
         {
             Value = value;
         }
-        public string Value { get; }
-
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;

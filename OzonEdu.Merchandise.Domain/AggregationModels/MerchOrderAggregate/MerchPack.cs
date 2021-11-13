@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using OzonEdu.Merchandise.Domain.AggregationModels.NamesAggregate;
+using OzonEdu.Merchandise.Domain.AggregationModels.Names;
 using OzonEdu.Merchandise.Domain.Models;
 
 namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
@@ -50,7 +50,7 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
             MerchPackType = merchPackType;
         }
 
-        public static bool TryGetPackById(int id, ref MerchPack packType)
+        public static bool TryGetPackById(int id, out MerchPack packType)
         {
             packType = SearchList.FirstOrDefault(x => x.MerchPackType.Id.Equals(id));
             return packType != null;

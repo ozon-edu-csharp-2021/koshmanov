@@ -1,12 +1,11 @@
 ﻿using MediatR;
-using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
 
 namespace OzonEdu.Merchandise.Domain.Events
 {
-    public class MerchOrderStatusChangedDomainEvent:INotification
+    public class OrderStateChangedToInProgressDomainEvent:INotification
     {
-        public MerchOrderStatusChangedDomainEvent(MerchOrder merchOrder)
+        public OrderStateChangedToInProgressDomainEvent(MerchOrder merchOrder)
         {
             MerchOrder = merchOrder;
         }

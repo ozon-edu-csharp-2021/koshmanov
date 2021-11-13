@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using OzonEdu.Merchandise.Domain.Models;
-using OzonEdu.Merchandise.Domain.AggregationModels.NamesAggregate;
+using OzonEdu.Merchandise.Domain.AggregationModels.Names;
 
-namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
+namespace OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate
 {
     public class FullName:ValueObject
     {

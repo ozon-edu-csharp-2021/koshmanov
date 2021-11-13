@@ -1,121 +1,106 @@
 ﻿using System;
 using System.Collections.Generic;
 using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
+using OzonEdu.Merchandise.Domain.Contracts;
 using OzonEdu.Merchandise.Domain.Events;
 using OzonEdu.Merchandise.Domain.Exceptions;
 using OzonEdu.Merchandise.Domain.Models;
 
 namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
 {
-    public class MerchOrder:Entity
+    public class MerchOrder:Entity, IAggregateRoot
     {
-        public MerchOrder(Employee employee, MerchPack merchPack, OrderState orderState)
+        public MerchOrder(EmployeeId employeeId, MerchPack merchPack, OrderState orderState)
         {
-            Employee = employee;
+            EmployeeId = employeeId;
             MerchPack = merchPack;
-            if(orderState.Equals(OrderState.New))
-                AddCreatedNewMerchOrderDomainEvent();
             CurrentOrderState = orderState;
+            if(CurrentOrderState.Equals(OrderState.New))
+                AddCreatedNewMerchOrderDomainEvent();
         }
-        public Employee Employee { get; }
+        public MerchOrder(EmployeeId employeeId, MerchPack merchPack)
+        {
+            EmployeeId = employeeId;
+            MerchPack = merchPack;
+            CurrentOrderState = OrderState.New;
+            AddCreatedNewMerchOrderDomainEvent();
+        }
+        public EmployeeId EmployeeId { get; }
         public MerchPack MerchPack { get; }
         public OrderState CurrentOrderState { get; private set; }
-     
-        /// <summary>
-        /// При каждом состоянии своё событие и бизнес логика. 
-        /// </summary>
-        public void UpdateOrderState(OrderState newState)
+        public void SetInProgressStatus()
         {
-            if (newState == null)
-                throw new ArgumentNullException();
-            if (!Equals(CurrentOrderState, newState))
+            if (CurrentOrderState.Equals(OrderState.New)||
+                CurrentOrderState.Equals(OrderState.Waiting))
             {
-                if (Equals(CurrentOrderState, OrderState.Completed))
-                {
-                    ThrowWrongStateException(newState);
-                }
-                else if (Equals(CurrentOrderState, OrderState.New))
-                {
-                    if (Equals(newState, OrderState.InProgress)||
-                        Equals(newState, OrderState.Waiting)||
-                        Equals(newState, OrderState.Canceled))
-                    {
-                        CurrentOrderState = newState;
-                        AddMerchOrderStatusChangedDomainEvent();
-                    }
-                    else
-                    {
-                        ThrowWrongStateException(newState);
-                    }
-                }else if (Equals(CurrentOrderState, OrderState.InProgress))
-                {
-                    if (Equals(newState, OrderState.GiveOut)||
-                        Equals(newState, OrderState.Canceled))
-                    {
-                        CurrentOrderState = newState;
-                        AddMerchOrderStatusChangedDomainEvent();
-                    }
-                    else
-                    {
-                        ThrowWrongStateException(newState);
-                    }
-                }
-                else if (Equals(CurrentOrderState, OrderState.GiveOut))
-                {
-                    if (Equals(newState, OrderState.Completed))
-                    {
-                        CurrentOrderState = newState;
-                        AddMerchOrderStatusChangedDomainEvent();
-                    }
-                    else
-                    {
-                        ThrowWrongStateException(newState);
-                    }
-                }else if (Equals(CurrentOrderState, OrderState.Canceled))
-                {
-                    if (Equals(newState, OrderState.Completed))
-                    {
-                        CurrentOrderState = newState;
-                        AddMerchOrderStatusChangedDomainEvent();
-                    }
-                    else
-                    {
-                        ThrowWrongStateException(newState);
-                    }
-                }else if (Equals(CurrentOrderState, OrderState.Waiting))
-                {
-                    if (Equals(newState, OrderState.InProgress)||
-                        Equals(newState, OrderState.Canceled))
-                    {
-                        CurrentOrderState = newState;
-                        AddMerchOrderStatusChangedDomainEvent();
-                    }
-                    else
-                    {
-                        ThrowWrongStateException(newState);
-                    }
-                }
+                CurrentOrderState = OrderState.InProgress;
+                AddDomainEvent(new OrderStateChangedToInProgressDomainEvent(this));
             }
             else
-                ThrowWrongStateException(newState);
+            {
+                ThrowWrongStateException(OrderState.InProgress);
+            }
         }
-
+        public void SetWaitingStatus()
+        {
+            if (CurrentOrderState.Equals(OrderState.New))
+            {
+                CurrentOrderState = OrderState.Waiting;
+                AddDomainEvent(new OrderStateChangedToWaitingDomainEvent(this));
+            }
+            else
+            {
+                ThrowWrongStateException(OrderState.Waiting);
+            }
+        }
+        public void SetGiveOutStatus()
+        {
+            if (CurrentOrderState.Equals(OrderState.InProgress))
+            {
+                CurrentOrderState = OrderState.GiveOut;
+                AddDomainEvent(new OrderStateChangedToGiveOutEvent(this));
+            }
+            else
+            {
+                ThrowWrongStateException(OrderState.GiveOut);
+            }
+        }
+        public void SetCancelledStatus()
+        {
+            if (CurrentOrderState.Equals(OrderState.New)||
+                CurrentOrderState.Equals(OrderState.Waiting)||
+                CurrentOrderState.Equals(OrderState.InProgress))
+            {
+                CurrentOrderState = OrderState.Cancelled;
+                AddDomainEvent(new OrderStateChangedToCancelledEvent(this));
+            }
+            else
+            {
+                ThrowWrongStateException(OrderState.Cancelled);
+            }
+        }
+        public void SetCompletedStatus()
+        {
+            if (CurrentOrderState.Equals(OrderState.GiveOut)||
+                CurrentOrderState.Equals(OrderState.Cancelled))
+            {
+                CurrentOrderState = OrderState.Completed;
+                AddDomainEvent(new OrderStateChangedToCompletedEvent(this));
+            }
+            else
+            {
+                ThrowWrongStateException(OrderState.Completed);
+            }
+        }
         private void ThrowWrongStateException(OrderState newState)
         {
             throw new WrongOrderStateValueException($"Incorrect new state value {newState.Name} " +
                                                     $"Current state {CurrentOrderState.Name}; ");
         }
-
         private void AddCreatedNewMerchOrderDomainEvent()
         {
             var orderCreatedDe = new CreatedNewMerchOrderDomainEvent(this);
             AddDomainEvent(orderCreatedDe);
-        }
-        
-        private void AddMerchOrderStatusChangedDomainEvent()
-        {
-            var merchOrderStatusChangedDomainEvent = new MerchOrderStatusChangedDomainEvent(this);
-            AddDomainEvent(merchOrderStatusChangedDomainEvent);
         }
     }
 }
