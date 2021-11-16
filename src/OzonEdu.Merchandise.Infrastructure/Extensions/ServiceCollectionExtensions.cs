@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using OzonEdu.Merchandise.Application.Commands.CreateMerchOrder;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
-using OzonEdu.Merchandise.Infrastructure.Commands.CreateMerchOrder;
 
 
 namespace OzonEdu.Merchandise.Infrastructure.Extensions

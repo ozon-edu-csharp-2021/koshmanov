@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using OzonEdu.Merchandise.Application.Commands.CreateMerchOrder;
+using OzonEdu.Merchandise.Application.Contracts;
 using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
-using OzonEdu.Merchandise.Infrastructure.Commands.CreateMerchOrder;
-using OzonEdu.Merchandise.Infrastructure.Contracts;
+
 namespace OzonEdu.Merchandise.Infrastructure.Handlers
 { 
     public class CreateMerchOrderCommandHandler:IRequestHandler<CreateMerchOrderCommand, int>

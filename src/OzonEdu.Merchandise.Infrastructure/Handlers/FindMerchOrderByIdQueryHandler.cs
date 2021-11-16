@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using OzonEdu.Merchandise.Application.Queries.FindById;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
-using OzonEdu.Merchandise.Infrastructure.Queries.FindById;
 
 namespace OzonEdu.Merchandise.Infrastructure.Handlers
 {

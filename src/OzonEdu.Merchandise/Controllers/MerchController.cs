@@ -3,8 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OzonEdu.Merchandise.Infrastructure.Commands.CreateMerchOrder;
-using OzonEdu.Merchandise.Infrastructure.Queries.FindById;
+using OzonEdu.Merchandise.Application.Commands.CreateMerchOrder;
+using OzonEdu.Merchandise.Application.Queries.FindById;
 using OzonEdu.Merchandise.Models;
 using OzonEdu.Merchandise.Services.Interfaces;
 

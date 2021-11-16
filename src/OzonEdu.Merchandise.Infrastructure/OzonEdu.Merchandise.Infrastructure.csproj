@@ -21,11 +21,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\OzonEdu.Merchandise.Domain\OzonEdu.Merchandise.Domain.csproj" />
+      <ProjectReference Include="..\OzonEdu.Merchandise.Application\OzonEdu.Merchandise.Application.csproj" />
       <ProjectReference Include="..\OzonEdu.Merchandise.Grpc\OzonEdu.Merchandise.Grpc.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Queries" />
       <Folder Include="RepositoryAbstractions\Mock" />
     </ItemGroup>
 </Project>
