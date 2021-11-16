@@ -24,8 +24,8 @@ namespace OzonEdu.Merchandise.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("{id:long}/{merchId:int}")]//
-        public async Task<ActionResult<GetMerchResponse>> GetMerch([FromRoute]long id, [FromRoute]int merchId,
+        [HttpGet("{id:int}/{merchId:int}")]//
+        public async Task<ActionResult<GetMerchResponse>> GetMerch([FromRoute]int id, [FromRoute]int merchId,
             CancellationToken token)
         {;
             CreateMerchOrderCommand createCommand = new CreateMerchOrderCommand()

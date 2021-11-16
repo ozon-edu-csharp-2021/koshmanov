@@ -6,15 +6,21 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate
 {
     public class Employee:Entity, IAggregateRoot
     {
-        public Employee(FullName fullName, Contact contact, IsNotified isNotified)
+        private Employee(int id, Email email)
         {
-            FullName = fullName;
-            Contact = contact;
-            IsNotified = isNotified;
+            Id = id;
+            Email = email;
         }
-        public FullName FullName { get; }
-        public Contact Contact { get; }
-        public IsNotified IsNotified {get;}  
+        public Email Email {get; private set; }
+
+        public static Employee Create(int id, Email email)
+        {
+            return new Employee(id, email);
+        }
         
+        public void UpdateEmail(Email email)
+        {
+            Email = email;
+        }
     }
 }

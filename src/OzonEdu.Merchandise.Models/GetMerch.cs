@@ -1,14 +1,11 @@
 ﻿namespace OzonEdu.Merchandise.Models
 {
-  
-    
     public class GetMerchResponse
     {
         public GetMerchResponse(MerchOrder order)
         {
             Order = order;
         }
-
         public MerchOrder Order { get; }
     }
     public class GetMerchRequest
@@ -18,9 +15,7 @@
             Employee = employee;
             MerchItem = merchItem;
         }
-
         public Employee Employee{ get; }
         public MerchItem MerchItem{ get; }
     }
-    
 }

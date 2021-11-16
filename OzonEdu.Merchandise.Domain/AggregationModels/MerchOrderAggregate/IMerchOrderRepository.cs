@@ -16,5 +16,6 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
         Task<MerchOrder> FindById(long id, CancellationToken cancellationToken = default);
         Task<MerchOrder> CheckOrderState(MerchOrder order);
         Task<bool> CheckEmployeeMerch(long employeeId, MerchPack merchPack);
+        Task<bool> CheckEmployeeOrders(long employeeId, MerchPack merchPack);
     }
 }

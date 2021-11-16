@@ -44,7 +44,7 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
         public ICollection<MerchItem> MerchItems { get; }
         public MerchPackType MerchPackType { get; }
 
-        public MerchPack(ICollection<MerchItem> merchItems, MerchPackType merchPackType):base(merchPackType.Id, merchPackType.Name)
+        private MerchPack(ICollection<MerchItem> merchItems, MerchPackType merchPackType):base(merchPackType.Id, merchPackType.Name)
         {
             MerchItems = merchItems;
             MerchPackType = merchPackType;
