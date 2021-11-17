@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using OzonEdu.Merchandise.GrpcServices;
+using OzonEdu.Merchandise.Infrastructure.Extensions;
 using OzonEdu.Merchandise.Services;
 using OzonEdu.Merchandise.Services.Interfaces;
 
@@ -25,6 +26,7 @@ namespace OzonEdu.Merchandise
         {
             services.AddSingleton<MerchandiseGrpcService>();
             services.AddSingleton<IMerchandiseService, MerchandiseService>();
+            services.AddInfrastructure();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
