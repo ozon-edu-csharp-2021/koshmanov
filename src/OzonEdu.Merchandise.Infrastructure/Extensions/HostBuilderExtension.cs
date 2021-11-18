@@ -2,8 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using OzonEdu.Merchandise.Infrastructure.Configuration.Interceptor;
 using OzonEdu.Merchandise.Infrastructure.Filters;
+using OzonEdu.Merchandise.Infrastructure.Repositories.Infrastructure;
+using OzonEdu.Merchandise.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace OzonEdu.Merchandise.Infrastructure.Extensions
 {
@@ -13,6 +16,7 @@ namespace OzonEdu.Merchandise.Infrastructure.Extensions
         {
             builder.ConfigureServices(services =>
             {
+                
                 services.AddControllers(options => options.Filters.Add<GlobalExceptionFilter>());
                 services.AddSingleton<IStartupFilter, SwaggerStartupFilter>();
                 services.AddSwaggerGen(options =>
@@ -22,6 +26,7 @@ namespace OzonEdu.Merchandise.Infrastructure.Extensions
                 });
                 services.AddGrpc(options=> options.Interceptors.Add<LoggingInterceptor>());
                 services.AddSingleton<IStartupFilter, MiddlewareStartupFilter>();
+                services.AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
             });
             return builder;
         }

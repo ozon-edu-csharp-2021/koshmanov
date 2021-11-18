@@ -12,8 +12,8 @@ WORKDIR "/src/src/OzonEdu.Merchandise"
 RUN dotnet build "OzonEdu.Merchandise.csproj" -c  Release -o /app/build
 
 FROM build-sdk as publish
-
 RUN dotnet publish "OzonEdu.Merchandise.csproj" -c  Release -o /app/publish
+COPY "entrypoint.sh" "/app/publish/."
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 as runtime
 
 WORKDIR /app
@@ -24,4 +24,6 @@ EXPOSE 433
 FROM runtime as final
 WORKDIR /src
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet","OzonEdu.Merchandise.dll"]
+
+RUN chmod +x entrypoint.sh
+CMD /bin/bash entrypoint.sh

@@ -62,7 +62,7 @@ namespace OzonEdu.Merchandise.Infrastructure.Handlers
             if (res)
             {
                 newMerchOrder.SetInProgressStatus();
-                _stockService.GetStockItem(merchPack);
+                await _stockService.GetStockItem(merchPack);
                 //отправка уведомления сотруднику
                 newMerchOrder.SetGiveOutStatus();
             }
