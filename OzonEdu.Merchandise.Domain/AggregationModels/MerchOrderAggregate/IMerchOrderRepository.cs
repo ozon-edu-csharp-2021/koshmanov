@@ -13,7 +13,6 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
     {
         Task<MerchOrder> CreateAsync(MerchOrder merchOrder, CancellationToken cancellationToken = default);
         Task<MerchOrder> UpdateAsync(MerchOrder merchOrder, CancellationToken cancellationToken = default);
-        
         Task<MerchOrder> FindById(int orderId, CancellationToken cancellationToken = default);
         Task<OrderState> CheckOrderState(int orderId, CancellationToken cancellationToken = default);
         Task<bool> CheckEmployeeHaveMerch(int employeeId, int merchPackId, CancellationToken cancellationToken = default);

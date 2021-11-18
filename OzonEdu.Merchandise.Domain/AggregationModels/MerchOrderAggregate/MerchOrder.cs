@@ -18,7 +18,7 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
             if(CurrentOrderState.Equals(OrderState.New))
                 AddCreatedNewMerchOrderDomainEvent();
         }
-        
+     
         private MerchOrder(int id, EmployeeId employeeId, MerchPack merchPack, OrderState orderState)
         {
             Id = id;

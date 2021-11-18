@@ -47,11 +47,13 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
             orderState = SearchList.FirstOrDefault(x => x.Id.Equals(id));
             return orderState != null;
         }
+
         public static OrderState GetOrderStateById(int id)
         {
             return SearchList.FirstOrDefault(x => x.Id.Equals(id));
            
         }
+
         public static bool TryGetOrderStateByName(string name, out OrderState orderState)
         {
             orderState = SearchList.FirstOrDefault(x => string.Equals(x.Name, name));
