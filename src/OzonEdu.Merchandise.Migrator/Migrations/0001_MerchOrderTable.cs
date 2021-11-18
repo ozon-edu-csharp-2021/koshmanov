@@ -10,7 +10,8 @@ namespace OzonEdu.Merchandise.Migrator.Migrations
             Create
                 .Table("merch_order")
                 .WithColumn("id").AsInt64().Identity().PrimaryKey()
-                .WithColumn("employee_email").AsString().NotNullable()
+                .WithColumn("employee_id").AsInt32().NotNullable()
+                //.WithColumn("employee_email").AsString().NotNullable()
                 .WithColumn("merch_pack_id").AsInt32().NotNullable()
                 .WithColumn("status_id").AsInt32().NotNullable();
         }

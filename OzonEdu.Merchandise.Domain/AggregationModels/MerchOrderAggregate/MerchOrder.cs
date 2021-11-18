@@ -18,6 +18,17 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
             if(CurrentOrderState.Equals(OrderState.New))
                 AddCreatedNewMerchOrderDomainEvent();
         }
+        
+        private MerchOrder(int id, EmployeeId employeeId, MerchPack merchPack, OrderState orderState)
+        {
+            Id = id;
+            EmployeeId = employeeId;
+            MerchPack = merchPack;
+            CurrentOrderState = orderState;
+            if(CurrentOrderState.Equals(OrderState.New))
+                AddCreatedNewMerchOrderDomainEvent();
+        }
+        
         private MerchOrder(EmployeeId employeeId, MerchPack merchPack)
         {
             EmployeeId = employeeId;
@@ -34,6 +45,11 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
         public static MerchOrder Create(EmployeeId employeeId, MerchPack merchPack, OrderState orderState)
         {
             var merchOrder = new MerchOrder(employeeId, merchPack, orderState);
+            return merchOrder;
+        }
+        public static MerchOrder Create(int id, EmployeeId employeeId, MerchPack merchPack, OrderState orderState)
+        {
+            var merchOrder = new MerchOrder(id, employeeId, merchPack, orderState);
             return merchOrder;
         }
         public EmployeeId EmployeeId { get; }

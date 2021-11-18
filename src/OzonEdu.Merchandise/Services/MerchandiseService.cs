@@ -3,10 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using OzonEdu.Merchandise.Models;
-using OzonEdu.Merchandise.Services.Interfaces;
 namespace OzonEdu.Merchandise.Services
 {
-    public class MerchandiseService: IMerchandiseService
+    public class MerchandiseService
     {
         private readonly GetOrderStateResponse _orderStateResponse = new GetOrderStateResponse(MerchOrderStatus.Other);
 

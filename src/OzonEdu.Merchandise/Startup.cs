@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,10 +15,7 @@ using Microsoft.OpenApi.Models;
 using OzonEdu.Merchandise.GrpcServices;
 using OzonEdu.Merchandise.Infrastructure.Configuration.Database;
 using OzonEdu.Merchandise.Infrastructure.Extensions;
-using OzonEdu.Merchandise.Infrastructure.Repositories.Infrastructure.Interfaces;
 using OzonEdu.Merchandise.Services;
-using OzonEdu.Merchandise.Services.Interfaces;
-
 
 
 namespace OzonEdu.Merchandise
@@ -32,9 +30,10 @@ namespace OzonEdu.Merchandise
         }
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMediatR(typeof(Startup), typeof(DatabaseConnectionOptions));
             services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
             services.AddSingleton<MerchandiseGrpcService>();
-            services.AddSingleton<IMerchandiseService, MerchandiseService>();
+            services.AddSingleton<MerchandiseService>();
             services.AddInfrastructure();
         }
         

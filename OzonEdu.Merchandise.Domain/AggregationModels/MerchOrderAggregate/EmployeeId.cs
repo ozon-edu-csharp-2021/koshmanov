@@ -5,9 +5,9 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
 {
     public class EmployeeId: ValueObject
     {
-        public long Value { get; }
+        public int Value { get; }
 
-        public EmployeeId(long value)
+        public EmployeeId(int value)
         {
             Value = value;
         }

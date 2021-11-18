@@ -5,7 +5,7 @@ using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using OzonEdu.Merchandise.Grpc;
-using OzonEdu.Merchandise.Services.Interfaces;
+using OzonEdu.Merchandise.Infrastructure.Repositories.Infrastructure.Interfaces;
 using OzonEdu.Merchandise.Models;
 using Employee = OzonEdu.Merchandise.Models.Employee;
 

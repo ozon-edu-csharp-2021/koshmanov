@@ -55,5 +55,10 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
             packType = SearchList.FirstOrDefault(x => x.MerchPackType.Id.Equals(id));
             return packType != null;
         }
+        
+        public static MerchPack GetPackById(int id)
+        {
+            return SearchList.FirstOrDefault(x => x.MerchPackType.Id.Equals(id));
+        }
     }
 }

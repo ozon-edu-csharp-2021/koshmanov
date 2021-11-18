@@ -5,8 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OzonEdu.Merchandise.Application.Commands.CreateMerchOrder;
 using OzonEdu.Merchandise.Application.Queries.FindById;
+using OzonEdu.Merchandise.Infrastructure.Repositories.Infrastructure.Interfaces;
 using OzonEdu.Merchandise.Models;
-using OzonEdu.Merchandise.Services.Interfaces;
 
 
 namespace OzonEdu.Merchandise.Controllers 
@@ -37,8 +37,8 @@ namespace OzonEdu.Merchandise.Controllers
             return Ok(result);
         }
         
-        [HttpGet("{id:long}")]//
-        public async Task<ActionResult<GetMerchResponse>> GetMerchOrderById([FromRoute]long id,
+        [HttpGet("{id:int}")]//
+        public async Task<ActionResult<GetMerchResponse>> GetMerchOrderById([FromRoute]int id,
             CancellationToken token)
         {
             FindMerchOrderByIdQuery findQuery = new FindMerchOrderByIdQuery()
@@ -59,7 +59,5 @@ namespace OzonEdu.Merchandise.Controllers
             var merch = await _merchService.GetMerchOrderState(request, token);
             return merch;
         }
-        
-        
     }
 }
