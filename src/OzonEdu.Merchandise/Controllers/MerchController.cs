@@ -5,8 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OzonEdu.Merchandise.Application.Commands.CreateMerchOrder;
 using OzonEdu.Merchandise.Application.Queries.FindById;
-using OzonEdu.Merchandise.Infrastructure.Repositories.Infrastructure.Interfaces;
 using OzonEdu.Merchandise.Models;
+using OzonEdu.Merchandise.Services.Interfaces;
 
 
 namespace OzonEdu.Merchandise.Controllers 

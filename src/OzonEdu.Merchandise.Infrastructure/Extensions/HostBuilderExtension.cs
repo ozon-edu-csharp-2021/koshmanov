@@ -1,12 +1,10 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
 using OzonEdu.Merchandise.Domain.Contracts;
-using OzonEdu.Merchandise.Infrastructure.Configuration.Database;
 using OzonEdu.Merchandise.Infrastructure.Configuration.Interceptor;
 using OzonEdu.Merchandise.Infrastructure.Filters;
 using OzonEdu.Merchandise.Infrastructure.Repositories.Implementation;

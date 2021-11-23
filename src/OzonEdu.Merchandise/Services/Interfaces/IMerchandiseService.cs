@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using OzonEdu.Merchandise.Models;
 
-namespace OzonEdu.Merchandise.Infrastructure.Repositories.Infrastructure.Interfaces
+namespace OzonEdu.Merchandise.Services.Interfaces
 {
     public interface IMerchandiseService
     {

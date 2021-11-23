@@ -8,6 +8,7 @@ using OzonEdu.Merchandise.Application.Commands.CreateMerchOrder;
 using OzonEdu.Merchandise.Application.Contracts;
 using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
+using OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.Merchandise.Domain.Contracts;
 
 namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
@@ -16,12 +17,14 @@ namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
     {
         private readonly IMerchOrderRepository _merchOrderRepository;
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IMerchPackRepository _merchPackRepository;
         private readonly IStockItemService _stockService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateMerchOrderCommandHandler(IMerchOrderRepository mOrderRepository, IEmployeeRepository employeeRepository, IStockItemService stockService, IUnitOfWork unitOfWork)
+        public CreateMerchOrderCommandHandler(IMerchOrderRepository mOrderRepository, IMerchPackRepository merchPackRepository,  IEmployeeRepository employeeRepository, IStockItemService stockService, IUnitOfWork unitOfWork)
         {
             _merchOrderRepository = mOrderRepository;
+            _merchPackRepository = merchPackRepository;
             _employeeRepository = employeeRepository;
             _stockService = stockService;
             _unitOfWork = unitOfWork;
@@ -30,7 +33,7 @@ namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
         public async Task<int> Handle(CreateMerchOrderCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.StartTransaction(cancellationToken);
-            if (!MerchPack.TryGetPackById(request.MerchPackType, out var merchPack))
+            if (!await _merchPackRepository.CheckPackByIdAsync(request.MerchPackType, out var merchPack))
             {
                 throw new Exception($"Merch pack with id {request.MerchPackType} does not exist!");
             }
@@ -53,7 +56,7 @@ namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
         
             if (!_merchOrderRepository.CheckEmployeeHaveMerch(employee.Id, merchPack.Id).Result)
             {
-                throw new Exception($"Employee {request.EmloyeeId} already have merch pack {merchPack.Name}");
+                throw new Exception($"Employee {request.EmloyeeId} already have merch pack {merchPack.Type.Name}");
             }
 
             //if (!_merchOrderRepository.CheckEmployeeHaveMerchOrders(employee.Id, merchPack.Id, cancellationToken).Result);

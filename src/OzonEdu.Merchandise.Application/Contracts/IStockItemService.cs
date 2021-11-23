@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
+using OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate;
 
 namespace OzonEdu.Merchandise.Application.Contracts
 {

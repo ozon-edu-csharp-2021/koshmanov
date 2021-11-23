@@ -2,7 +2,7 @@
 using System.Linq;
 using OzonEdu.Merchandise.Domain.Models;
 
-namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
+namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate
 {
     public class MerchPackType : Enumeration
     {

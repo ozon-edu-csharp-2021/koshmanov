@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
+
 using OzonEdu.Merchandise.Domain.Contracts;
 using OzonEdu.Merchandise.Domain.Events;
 using OzonEdu.Merchandise.Domain.Exceptions;
 using OzonEdu.Merchandise.Domain.Models;
+using OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate;
 
 namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
 {
