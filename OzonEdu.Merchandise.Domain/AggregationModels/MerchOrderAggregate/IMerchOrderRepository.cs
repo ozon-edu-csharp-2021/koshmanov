@@ -14,13 +14,13 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
         Task<MerchOrder> CreateAsync(MerchOrder merchOrder, CancellationToken cancellationToken = default);
         Task<MerchOrder> UpdateAsync(MerchOrder merchOrder, CancellationToken cancellationToken = default);
         
-        Task<MerchOrder> FindById(int orderId, CancellationToken cancellationToken = default);
-        Task<OrderState> CheckOrderState(int orderId, CancellationToken cancellationToken = default);
-        Task<bool> CheckEmployeeHaveMerch(int employeeId, int merchPackId, CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<MerchOrder>> GetAllEmployeeCompleteOrders(int employeeId, CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<MerchOrder>> GetAllEmployeeInProcessOrders(int employeeId, CancellationToken cancellationToken = default);
-        Task<bool>CheckEmployeeHaveMerchOrders(int employeeId, int merchPackId,CancellationToken cancellationToken= default);
-        Task<IReadOnlyList<MerchOrder>> GetAllEmployeeOrdersInSpecialStatus(int employeeId, List<int> statusList,
+        Task<MerchOrder> FindById(long orderId, CancellationToken cancellationToken = default);
+        Task<OrderState> CheckOrderState(long orderId, CancellationToken cancellationToken = default);
+        Task<bool> CheckEmployeeHaveMerch(long employeeId, long merchPackId, CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<MerchOrder>> GetAllEmployeeCompleteOrders(long employeeId, CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<MerchOrder>> GetAllEmployeeInProcessOrders(long employeeId, CancellationToken cancellationToken = default);
+        Task<bool>CheckEmployeeHaveMerchOrders(long employeeId, long merchPackId,CancellationToken cancellationToken= default);
+        Task<IReadOnlyList<MerchOrder>> GetAllEmployeeOrdersInSpecialStatus(long employeeId, List<int> statusList,
             CancellationToken cancellationToken = default);
     }
 }

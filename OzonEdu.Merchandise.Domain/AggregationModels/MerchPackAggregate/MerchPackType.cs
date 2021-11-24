@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using OzonEdu.Merchandise.Domain.Exceptions;
 using OzonEdu.Merchandise.Domain.Models;
 
 namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate
@@ -13,8 +16,19 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate
         public static readonly MerchPackType VeteranPack  =              new MerchPackType(50, "VeteranPack");
 
         private MerchPackType(int id, string name) : base(id, name)
-        {
+        { }
 
+        public static MerchPackType Parse(int id)
+        {
+            return id switch
+            {
+                10 => WelcomePack,
+                20 => ConferenceListenerPack,
+                30 => ConferenceSpeakerPack,
+                40 => ProbationPeriodEndingPack,
+                50 => VeteranPack,
+                _ => throw new WrongMerchPackTypeException($"Merch pack with id {id} does not exist")
+            };
         }
     }
 }

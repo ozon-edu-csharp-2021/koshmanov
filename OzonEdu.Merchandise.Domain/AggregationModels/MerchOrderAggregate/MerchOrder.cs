@@ -11,51 +11,56 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
 {
     public class MerchOrder:Entity, IAggregateRoot
     {
-        private MerchOrder(EmployeeId employeeId, MerchPack merchPack, OrderState orderState)
+        private MerchOrder(EmployeeId employeeId, PackId merchPackId, OrderState orderState, OrderDate orderDate)
         {
             EmployeeId = employeeId;
-            MerchPack = merchPack;
+            MerchPackId = merchPackId;
             CurrentOrderState = orderState;
+            OrderDate = orderDate;
             if(CurrentOrderState.Equals(OrderState.New))
                 AddCreatedNewMerchOrderDomainEvent();
         }
         
-        private MerchOrder(int id, EmployeeId employeeId, MerchPack merchPack, OrderState orderState)
+        private MerchOrder(long id, EmployeeId employeeId, PackId merchPackId, OrderState orderState, OrderDate orderDate)
         {
             Id = id;
             EmployeeId = employeeId;
-            MerchPack = merchPack;
+            MerchPackId = merchPackId;
+            OrderDate = orderDate;
             CurrentOrderState = orderState;
             if(CurrentOrderState.Equals(OrderState.New))
                 AddCreatedNewMerchOrderDomainEvent();
         }
         
-        private MerchOrder(EmployeeId employeeId, MerchPack merchPack)
+        private MerchOrder( EmployeeId employeeId, PackId merchPackId, OrderDate orderDate)
         {
             EmployeeId = employeeId;
-            MerchPack = merchPack;
+            MerchPackId = merchPackId;
+            OrderDate = orderDate;
             CurrentOrderState = OrderState.New;
             AddCreatedNewMerchOrderDomainEvent();
         }
 
-        public static MerchOrder Create(EmployeeId employeeId, MerchPack merchPack)
+        public static MerchOrder Create(EmployeeId employeeId, PackId merchPackId, OrderDate orderDate)
         {
-            var merchOrder = new MerchOrder(employeeId, merchPack);
+            var merchOrder = new MerchOrder(employeeId, merchPackId, orderDate);
             return merchOrder;
         }
-        public static MerchOrder Create(EmployeeId employeeId, MerchPack merchPack, OrderState orderState)
+        public static MerchOrder Create(EmployeeId employeeId, PackId merchPackId, OrderState orderState, OrderDate orderDate)
         {
-            var merchOrder = new MerchOrder(employeeId, merchPack, orderState);
+            var merchOrder = new MerchOrder(employeeId, merchPackId, orderState, orderDate);
             return merchOrder;
         }
-        public static MerchOrder Create(int id, EmployeeId employeeId, MerchPack merchPack, OrderState orderState)
+        public static MerchOrder Create(long id, EmployeeId employeeId, PackId merchPackId, OrderState orderState, OrderDate orderDate)
         {
-            var merchOrder = new MerchOrder(id, employeeId, merchPack, orderState);
+            var merchOrder = new MerchOrder(id, employeeId, merchPackId, orderState, orderDate);
             return merchOrder;
         }
         public EmployeeId EmployeeId { get; }
-        public MerchPack MerchPack { get; }
+        public PackId MerchPackId { get; }
         public OrderState CurrentOrderState { get; private set; }
+        public OrderDate OrderDate { get; }
+
         public void SetInProgressStatus()
         {
             if (CurrentOrderState.Equals(OrderState.New)||

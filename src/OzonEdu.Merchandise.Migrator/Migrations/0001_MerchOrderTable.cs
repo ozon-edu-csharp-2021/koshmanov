@@ -7,13 +7,13 @@ namespace OzonEdu.Merchandise.Migrator.Migrations
     {
         public override void Up()
         {
-            Create
-                .Table("merch_order")
-                .WithColumn("id").AsInt64().Identity().PrimaryKey()
-                .WithColumn("employee_id").AsInt32().NotNullable()
-                //.WithColumn("employee_email").AsString().NotNullable()
-                .WithColumn("merch_pack_id").AsInt32().NotNullable()
-                .WithColumn("status_id").AsInt32().NotNullable();
+            Execute.Sql(@"CREATE TABLE if not exists merch_order(
+            id BIGSERIAL PRIMARY KEY, 
+            employee_id BIGINT NOT NULL,
+            merch_pack_id BIGINT NOT NULL,
+            status_id INT NOT NULL,
+            order_date DATETIME NOT NULL)
+            ");
         }
 
         public override void Down()

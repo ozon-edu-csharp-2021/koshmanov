@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using OzonEdu.Merchandise.Domain.Models;
 
-namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
+namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate
 {
-    public class EmployeeId: ValueObject
+    public class PackId:ValueObject
     {
         public long Value { get; }
 
-        public EmployeeId(long value)
+        public PackId(long value)
         {
             Value = value;
         }

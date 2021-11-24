@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
 using OzonEdu.Merchandise.Domain.Contracts;
 using OzonEdu.Merchandise.Domain.Models;
 
@@ -11,14 +12,19 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate
         public IReadOnlyCollection<Sku> SkuCollection { get; private set; }
         public MerchPackType Type { get; }
         
-        public MerchPack(int id, IReadOnlyCollection<Sku> merchItems, MerchPackType merchPackType)
+        private MerchPack(long id, IReadOnlyCollection<Sku> merchItems, MerchPackType merchPackType)
         {
             Id = id;
             SkuCollection = merchItems;
             Type = merchPackType;
         }
 
-        public void AddToMerchPack(int id, IReadOnlyCollection<Sku> skus)
+        public static MerchPack Create(long id, IReadOnlyCollection<Sku> merchItems, MerchPackType merchPackType)
+        {
+            return new MerchPack(id, merchItems,  merchPackType);
+        }
+
+        public void AddToMerchPack( IReadOnlyCollection<Sku> skus)
         {
             var intersectArr =  SkuCollection
                 .Select(x=>x.Value)
@@ -31,7 +37,7 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate
             SkuCollection = SkuCollection.Union(skus).ToArray();
         }
         
-        public void DeleteFromMerchPack(int id, IReadOnlyCollection<Sku> skus)
+        public void DeleteFromMerchPack( IReadOnlyCollection<Sku> skus)
         {
             var intersectArr =  SkuCollection
                 .Select(x=>x.Value)

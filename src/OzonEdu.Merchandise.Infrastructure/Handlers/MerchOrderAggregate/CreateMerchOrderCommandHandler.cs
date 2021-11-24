@@ -13,7 +13,7 @@ using OzonEdu.Merchandise.Domain.Contracts;
 
 namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
 { 
-    public class CreateMerchOrderCommandHandler:IRequestHandler<CreateMerchOrderCommand, int>
+    public class CreateMerchOrderCommandHandler:IRequestHandler<CreateMerchOrderCommand, long>
     {
         private readonly IMerchOrderRepository _merchOrderRepository;
         private readonly IEmployeeRepository _employeeRepository;
@@ -30,19 +30,20 @@ namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(CreateMerchOrderCommand request, CancellationToken cancellationToken)
+        public async Task<long> Handle(CreateMerchOrderCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.StartTransaction(cancellationToken);
-            if (!await _merchPackRepository.CheckPackByIdAsync(request.MerchPackType, out var merchPack))
+            var merchPack = await _merchPackRepository.GetPackByIdAsync(request.MerchPackTypeId, cancellationToken);
+            if (merchPack==null)
             {
-                throw new Exception($"Merch pack with id {request.MerchPackType} does not exist!");
+                throw new Exception($"Merch pack with id {request.MerchPackTypeId} does not exist!");
             }
 
-            var employee = await _employeeRepository.FindByIdAsync(request.EmloyeeId, cancellationToken);
-            var email = Email.Create(request.EmloyeeEmail);
+            var employee = await _employeeRepository.FindByIdAsync(request.EmployeeId, cancellationToken);
+            var email = Email.Create(request.EmployeeEmail);
             if (employee == null)
             {
-                employee = Employee.Create(request.EmloyeeId, email);
+                employee = Employee.Create(request.EmployeeId, email);
                 await _employeeRepository.CreateAsync(employee, cancellationToken);
             }
             else
@@ -54,16 +55,11 @@ namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
                 }
             }
         
-            if (!_merchOrderRepository.CheckEmployeeHaveMerch(employee.Id, merchPack.Id).Result)
+            if (!await _merchOrderRepository.CheckEmployeeHaveMerch(employee.Id, merchPack.Id, cancellationToken))
             {
-                throw new Exception($"Employee {request.EmloyeeId} already have merch pack {merchPack.Type.Name}");
-            }
-
-            //if (!_merchOrderRepository.CheckEmployeeHaveMerchOrders(employee.Id, merchPack.Id, cancellationToken).Result);
-            //{
-            //    throw new Exception($"Employee {request.EmloyeeId} already have order of {merchPack.Name}");
-            //}
-            var newMerchOrder = MerchOrder.Create(new EmployeeId(employee.Id), merchPack); 
+                throw new Exception($"Employee {request.EmployeeId} already have merch pack {merchPack.Type.Name}");
+            } 
+            var newMerchOrder = MerchOrder.Create(new EmployeeId(employee.Id), new PackId(merchPack.Id), new OrderDate(DateTime.Now)); 
             await _merchOrderRepository.CreateAsync(newMerchOrder, cancellationToken);
             
             //обращение к сток апи сервису с проверкой наличия мерчпака на складе

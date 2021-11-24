@@ -6,14 +6,14 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate
 {
     public class Employee:Entity, IAggregateRoot
     {
-        private Employee(int id, Email email)
+        private Employee(long id, Email email)
         {
             Id = id;
             Email = email;
         }
         public Email Email {get; private set; }
 
-        public static Employee Create(int id, Email email)
+        public static Employee Create(long id, Email email)
         {
             return new Employee(id, email);
         }

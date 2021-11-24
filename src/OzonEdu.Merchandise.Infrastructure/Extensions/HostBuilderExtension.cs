@@ -3,7 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Npgsql;
+using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
+using OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.Merchandise.Domain.Contracts;
 using OzonEdu.Merchandise.Infrastructure.Configuration.Interceptor;
 using OzonEdu.Merchandise.Infrastructure.Filters;
@@ -33,6 +35,8 @@ namespace OzonEdu.Merchandise.Infrastructure.Extensions
                 services.AddScoped<IUnitOfWork, UnitOfWork>();
                 services.AddScoped<IChangeTracker, ChangeTracker>();
                 services.AddScoped<IMerchOrderRepository, MerchandiseRepository>();
+                services.AddScoped<IMerchPackRepository, MerchPackRepository>();
+                services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             });
             return builder;
         }
