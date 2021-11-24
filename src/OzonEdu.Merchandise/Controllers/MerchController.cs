@@ -24,14 +24,14 @@ namespace OzonEdu.Merchandise.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("{id:lonf}/{merchPackId:long}")]//
+        [HttpGet("{id:long}/{merchPackId:long}")]//
         public async Task<ActionResult<GetMerchResponse>> GetMerch([FromRoute]long id, [FromRoute]long merchPackId,
             CancellationToken token)
-        {;
+        {
             CreateMerchOrderCommand createCommand = new CreateMerchOrderCommand()
             {
                 EmployeeId = id,
-                MerchPackTypeId = merchPackId
+                MerchPackId = merchPackId
             };
             var result = await _mediator.Send(createCommand);
             return Ok(result);

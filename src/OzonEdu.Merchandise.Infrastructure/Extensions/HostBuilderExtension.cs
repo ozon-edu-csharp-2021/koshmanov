@@ -21,7 +21,6 @@ namespace OzonEdu.Merchandise.Infrastructure.Extensions
         {
             builder.ConfigureServices(services =>
             {
-                
                 services.AddControllers(options => options.Filters.Add<GlobalExceptionFilter>());
                 services.AddSingleton<IStartupFilter, SwaggerStartupFilter>();
                 services.AddSwaggerGen(options =>

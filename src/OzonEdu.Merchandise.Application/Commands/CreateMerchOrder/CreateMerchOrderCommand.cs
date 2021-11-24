@@ -6,6 +6,6 @@ namespace OzonEdu.Merchandise.Application.Commands.CreateMerchOrder
     {
         public long EmployeeId { get; set; }
         public string EmployeeEmail { get; set; }
-        public long MerchPackTypeId { get; set; }
+        public long MerchPackId { get; set; }
     }
 }

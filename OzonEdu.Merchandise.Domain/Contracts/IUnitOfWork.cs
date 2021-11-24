@@ -8,6 +8,5 @@ namespace OzonEdu.Merchandise.Domain.Contracts
     {
         ValueTask StartTransaction(CancellationToken token);
         Task SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
-        
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -33,10 +31,10 @@ namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
         public async Task<long> Handle(CreateMerchOrderCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.StartTransaction(cancellationToken);
-            var merchPack = await _merchPackRepository.GetPackByIdAsync(request.MerchPackTypeId, cancellationToken);
+            var merchPack = await _merchPackRepository.GetPackByIdAsync(request.MerchPackId, cancellationToken);
             if (merchPack==null)
             {
-                throw new Exception($"Merch pack with id {request.MerchPackTypeId} does not exist!");
+                throw new Exception($"Merch pack with id {request.MerchPackId} does not exist!");
             }
 
             var employee = await _employeeRepository.FindByIdAsync(request.EmployeeId, cancellationToken);

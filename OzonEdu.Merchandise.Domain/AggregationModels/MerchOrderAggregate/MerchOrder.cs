@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using OzonEdu.Merchandise.Domain.Contracts;
+﻿using OzonEdu.Merchandise.Domain.Contracts;
 using OzonEdu.Merchandise.Domain.Events;
 using OzonEdu.Merchandise.Domain.Exceptions;
 using OzonEdu.Merchandise.Domain.Models;
