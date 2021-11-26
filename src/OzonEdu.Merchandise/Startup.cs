@@ -16,6 +16,7 @@ using OzonEdu.Merchandise.GrpcServices;
 using OzonEdu.Merchandise.Infrastructure.Configuration.Database;
 using OzonEdu.Merchandise.Infrastructure.Extensions;
 using OzonEdu.Merchandise.Services;
+using OzonEdu.Merchandise.Services.Interfaces;
 
 
 namespace OzonEdu.Merchandise
@@ -33,7 +34,7 @@ namespace OzonEdu.Merchandise
             services.AddMediatR(typeof(Startup), typeof(DatabaseConnectionOptions));
             services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
             services.AddSingleton<MerchandiseGrpcService>();
-            services.AddSingleton<MerchandiseService>();
+            services.AddSingleton<IMerchandiseService,MerchandiseService>();
             services.AddInfrastructure();
         }
         

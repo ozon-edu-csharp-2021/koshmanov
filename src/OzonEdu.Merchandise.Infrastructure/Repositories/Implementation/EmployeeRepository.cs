@@ -72,9 +72,12 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
             string sql=@$"
                         select id, email
                         from employee    
-                        where id = {id}";
+                        where id = @Id";
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var result = await connection.QueryAsync<Models.EmployeeDto>(sql);
+            var result = await connection.QueryAsync<Models.EmployeeDto>(sql, new
+            {
+                Id = id
+            });
             var firstOfRes = result.First();
             return Employee.Create(firstOfRes.Id,  Email.Create(firstOfRes.Email) );
         }

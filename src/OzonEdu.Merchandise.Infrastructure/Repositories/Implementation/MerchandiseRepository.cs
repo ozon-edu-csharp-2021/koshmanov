@@ -77,9 +77,13 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
              string sql=@$"
                         select m.status_id, o.name 
                         from merch_order m inner join order_state o on o.id = m.status_id 
-                        where m.id = {orderId}";
+                        where m.id = @OrderId";
              var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-             var result = await connection.QueryAsync<Models.OrderState>(sql);
+             var result = await connection.QueryAsync<Models.OrderState>(sql, 
+                 new
+                 {
+                     OrderId = orderId
+                 });
 
              OrderState.TryGetOrderStateById( result.First().Id, out var val);
              return val;
@@ -90,9 +94,13 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
             string sql=@$"
                         select id, employee_id, merch_id, status_id, order_date
                         from merch_order    
-                        where id = {orderId}";
+                        where id = @OrderId";
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var result = await connection.QueryAsync<Models.MerchOrderDto>(sql);
+            var result = await connection.QueryAsync<Models.MerchOrderDto>(sql, 
+                new
+                {
+                    OrderId = orderId
+                });
             var firstOfRes = result.First();
             return MerchOrder.Create(firstOfRes.OrderId, 
                 new EmployeeId(firstOfRes.EmployeeId),
@@ -106,9 +114,15 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
             string sql=@$"
                         select id, employee_id, merch_id, status_id
                         from merch_order   
-                        where employee_id = {employeeId} and merch_id = {merchPackId} and status_id = 4";
+                        where employee_id = @EmployeeId and merch_id = @MerchPackId and status_id = any(@StatusIdList)";
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var result = await connection.QueryAsync<Models.MerchOrderDto>(sql);
+            var result = await connection.QueryAsync<Models.MerchOrderDto>(sql, 
+                new
+                {
+                    EmployeeId = employeeId,
+                    MerchPackId=merchPackId,
+                    StatusIdList = OrderState.GetCompletedIdList()
+                });
 
             return result.Any();
         }
@@ -118,73 +132,79 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
             string sql=@$"
                         select id, employee_id, merch_id, status_id
                         from merch_order   
-                        where employee_id = {employeeId} and merch_id = {merchPackId} and status_id = any(1,2,3,5,6)";
+                           where employee_id = @EmployeeId and merch_id = @MerchPackId  and status_id = any(@StateIdList)";
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var result = await connection.QueryAsync<Models.MerchOrderDto>(sql);
-
+            var result = await connection.QueryAsync<Models.MerchOrderDto>(sql, 
+                new
+                {
+                    EmployeeId = employeeId,
+                    MerchPackId = merchPackId,
+                    StateIdList = OrderState.GetActiveStateIdList()
+                });
             return result.Any();
         }
 
-        public async Task<IReadOnlyList<MerchOrder>> GetAllEmployeeCompleteOrders(long employeeId, CancellationToken cancellationToken = default)
+        public async Task<ICollection<MerchOrder>> GetAllEmployeeCompleteOrders(long employeeId, CancellationToken cancellationToken = default)
         {
             string sql=@$"
                         select id, employee_id, merch_id, status_id
                         from merch_order   
-                        where employee_id = {employeeId} and status_id = 4";
+                        where employee_id = @EmployeeId and status_id = any(@StatusIdList)";
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var result = await connection.QueryAsync<Models.MerchOrderDto>(sql);
-            var merchOrderList = new List<MerchOrder>();
-            result.ToList().ForEach(x=>merchOrderList.Add(
-                MerchOrder.Create(x.OrderId,
-                    new EmployeeId(x.EmployeeId), 
-                    new PackId(x.MerchPackId), 
-                    OrderState.GetOrderStateById(x.StatusId),
-                    new OrderDate(x.OrderDate))
-                ));
-        
-            return merchOrderList;
+            var result = await connection.QueryAsync<Models.MerchOrderDto>(sql, 
+                new
+                {
+                    EmployeeId = employeeId,
+                    StatusIdList = OrderState.GetCompletedIdList()
+                });
+
+            return result.Select(x => MerchOrder.Create(x.OrderId,
+                new EmployeeId(x.EmployeeId), 
+                new PackId(x.MerchPackId), 
+                OrderState.GetOrderStateById(x.StatusId),
+                new OrderDate(x.OrderDate))).ToList();
         }
 
-        public async Task<IReadOnlyList<MerchOrder>> GetAllEmployeeInProcessOrders(long employeeId, CancellationToken cancellationToken = default)
-        { 
+        public async Task<ICollection<MerchOrder>> GetAllEmployeeInProcessOrders(long employeeId, CancellationToken cancellationToken = default)
+        {
             string sql=@$"
                         select id, employee_id, merch_id, status_id, order_date
                         from merch_order   
-                        where employee_id = @employeeId and status_id = any(1,2,3,5,6)";
+                        where employee_id = @EmployeeId and status_id = any(@StateIdList)";
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var result = await connection.QueryAsync<Models.MerchOrderDto>(sql);
-            var merchOrderList = new List<MerchOrder>();
-            result.ToList().ForEach(x=>merchOrderList.Add(
-                MerchOrder.Create(x.OrderId, 
-                    new EmployeeId(x.EmployeeId), 
-                    new PackId(x.MerchPackId), 
-                    OrderState.GetOrderStateById(x.StatusId),
-                    new OrderDate(x.OrderDate))
-            ));
+            var result = await connection.QueryAsync<Models.MerchOrderDto>(sql, 
+                new
+                {
+                    EmployeeId = employeeId,
+                    StateIdList = OrderState.GetActiveStateIdList()
+                });
+            var merchOrderList = result.Select(x => MerchOrder.Create(x.OrderId,
+                new EmployeeId(x.EmployeeId), 
+                new PackId(x.MerchPackId), 
+                OrderState.GetOrderStateById(x.StatusId),
+                new OrderDate(x.OrderDate))).ToList();
           
             merchOrderList.ForEach(x=>_changeTracker.Track(x));
             return merchOrderList;
         }
         
-        public async Task<IReadOnlyList<MerchOrder>> GetAllEmployeeOrdersInSpecialStatus(long employeeId, List<int> statusList, CancellationToken cancellationToken = default)
+        public async Task<ICollection<MerchOrder>> GetAllEmployeeOrdersInSpecialStatus(long employeeId, IReadOnlyCollection<int> statusList, CancellationToken cancellationToken = default)
         {
              string sql=@$"
                         select id, employee_id, merch_id, status_id, order_date
                         from merch_order   
-                        where employee_id = @employeeId and status_id = any(@StatusList);";
+                        where employee_id = @EmployeeId and status_id = any(@StatusList);";
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
             var result = await connection.QueryAsync<Models.MerchOrderDto>(sql, new
             {
+                EmployeeId = employeeId,
                 StatusList = statusList
             });
-            var merchOrderList = new List<MerchOrder>();
-            result.ToList().ForEach(x=>merchOrderList.Add(
-                MerchOrder.Create(x.OrderId,
-                    new EmployeeId(x.EmployeeId),
-                    new PackId(x.MerchPackId), 
-                    OrderState.GetOrderStateById(x.StatusId),
-                    new OrderDate(x.OrderDate))
-            ));
+            var merchOrderList = result.Select(x => MerchOrder.Create(x.OrderId,
+                new EmployeeId(x.EmployeeId), 
+                new PackId(x.MerchPackId), 
+                OrderState.GetOrderStateById(x.StatusId),
+                new OrderDate(x.OrderDate))).ToList();
 
             merchOrderList.ForEach(x=>_changeTracker.Track(x));
 

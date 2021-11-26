@@ -23,14 +23,17 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
             _changeTracker = changeTracker;
         }
 
-        public async Task<IReadOnlyList<MerchPack>> GetPackListByMerchTypeIdAsync(int merchPackTypeId, CancellationToken cancellationToken=default)
+        public async Task<ICollection<MerchPack>> GetPackListByMerchTypeIdAsync(int merchPackTypeId, CancellationToken cancellationToken=default)
         {
             string sql=@$"
                         select merch_pack_id, sku, type_id
                         from merch_pack_sku_map    
-                        where type_id = {merchPackTypeId}";
+                        where type_id = @MerchPackTypeId";
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var result = await connection.QueryAsync<Models.MerchPackDto>(sql);
+            var result = await connection.QueryAsync<Models.MerchPackDto>(sql, new
+            {
+                MerchPackTypeId=merchPackTypeId   
+            });
             
             var merchPackList = new List<MerchPack>(); 
             var idList = result.Select(x => x.Id).Distinct().ToList();
@@ -53,15 +56,17 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
             string sql=@$"
                         select merch_pack_id, sku, type_id
                         from merch_pack_sku_map    
-                        where merch_pack_id = {packId}";
+                        where merch_pack_id = @PackId";
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var result = await connection.QueryAsync<Models.MerchPackDto>(sql);
+            var result = await connection.QueryAsync<Models.MerchPackDto>(sql, 
+                new
+                {
+                    PackId=packId   
+                });
             
             var packTypeId = result.First().PackType;
-            List<long> resSkus = result.Select(x => x.Sku).ToList();
-            List<Sku> skuList = new List<Sku>();
-            resSkus.ForEach(x=>skuList.Add(new Sku(x)));
-            return  MerchPack.Create(packId, skuList, MerchPackType.Parse(packTypeId));
+            var resSkus = result.Select(x => new Sku( x.Sku)).ToList();
+            return  MerchPack.Create(packId, resSkus, MerchPackType.Parse(packTypeId));
         }
     }
 }

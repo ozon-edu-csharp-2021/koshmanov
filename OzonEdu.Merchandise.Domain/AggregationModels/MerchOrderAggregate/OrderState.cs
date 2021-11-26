@@ -51,9 +51,17 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
         public static OrderState GetOrderStateById(int id)
         {
             return SearchList.FirstOrDefault(x => x.Id.Equals(id));
-           
+        }
+        
+        public static IReadOnlyCollection<int> GetActiveStateIdList()
+        {
+            return SearchList.Where(x =>x.Name!=Completed.Name && x.Name!= Cancelled.Name).Select(x =>x.Id).ToList();
         }
 
+        public static IReadOnlyCollection<int> GetCompletedIdList()
+        {
+            return SearchList.Where(x =>x.Name==Completed.Name).Select(x =>x.Id).ToList();
+        }
         public static bool TryGetOrderStateByName(string name, out OrderState orderState)
         {
             orderState = SearchList.FirstOrDefault(x => string.Equals(x.Name, name));

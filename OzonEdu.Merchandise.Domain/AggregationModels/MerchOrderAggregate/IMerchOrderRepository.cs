@@ -17,10 +17,10 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
         Task<MerchOrder> FindById(long orderId, CancellationToken cancellationToken = default);
         Task<OrderState> CheckOrderState(long orderId, CancellationToken cancellationToken = default);
         Task<bool> CheckEmployeeHaveMerch(long employeeId, long merchPackId, CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<MerchOrder>> GetAllEmployeeCompleteOrders(long employeeId, CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<MerchOrder>> GetAllEmployeeInProcessOrders(long employeeId, CancellationToken cancellationToken = default);
+        Task<ICollection<MerchOrder>> GetAllEmployeeCompleteOrders(long employeeId, CancellationToken cancellationToken = default);
+        Task<ICollection<MerchOrder>> GetAllEmployeeInProcessOrders(long employeeId, CancellationToken cancellationToken = default);
         Task<bool>CheckEmployeeHaveMerchOrders(long employeeId, long merchPackId,CancellationToken cancellationToken= default);
-        Task<IReadOnlyList<MerchOrder>> GetAllEmployeeOrdersInSpecialStatus(long employeeId, List<int> statusList, CancellationToken cancellationToken = default);
+        Task<ICollection<MerchOrder>> GetAllEmployeeOrdersInSpecialStatus(long employeeId, IReadOnlyCollection<int> statusList, CancellationToken cancellationToken = default);
 
     }
 }
