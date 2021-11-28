@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using RestEase.HttpClientFactory;
+using OzonEdu.Merchandise.Application.Contracts;
 using OzonEdu.Merchandise.GrpcServices;
 using OzonEdu.Merchandise.Infrastructure.Configuration.Database;
 using OzonEdu.Merchandise.Infrastructure.Extensions;
@@ -35,6 +37,8 @@ namespace OzonEdu.Merchandise
             services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
             services.AddSingleton<MerchandiseGrpcService>();
             services.AddSingleton<IMerchandiseService,MerchandiseService>();
+            services.AddRestEaseClient<IStockItemService>("http://localhost:5005");
+            services.AddSingleton<IStockItemService>();
             services.AddInfrastructure();
         }
         

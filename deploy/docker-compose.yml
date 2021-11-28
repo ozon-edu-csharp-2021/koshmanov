@@ -37,6 +37,9 @@ services:
   stock-api:
     image: 'ghcr.io/ozon-edu-csharp-2021/stock-api:main'
     hostname: 'stock-api'
+    ports:
+      - "5070:5004"
+      - "5072:5005"
     environment:
       DatabaseConnectionOptions__ConnectionString: "Host=host.docker.internal;Port=5427;Database=stock-api;Username=postgres;Password=stockApiPassword"
     depends_on:

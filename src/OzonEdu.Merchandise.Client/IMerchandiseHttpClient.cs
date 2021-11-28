@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using OzonEdu.Merchandise.Models;
 using Microsoft.AspNetCore.Mvc;
+using RestEase;
 
 namespace OzonEdu.Merchandise.Client
 {
+    [Header("RestEase")]
     public interface IMerchandiseHttpClient
     {
         [HttpGet("{id:long}/{itemName}")]
