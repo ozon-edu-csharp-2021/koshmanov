@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Google.Protobuf.Collections;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using OzonEdu.Merchandise.Grpc;
-using OzonEdu.Merchandise.Services.Interfaces;
 using OzonEdu.Merchandise.Models;
+using OzonEdu.Merchandise.Services.Interfaces;
 using Employee = OzonEdu.Merchandise.Models.Employee;
 
 namespace OzonEdu.Merchandise.GrpcServices

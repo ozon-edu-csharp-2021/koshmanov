@@ -4,7 +4,7 @@ using MediatR;
 using OzonEdu.Merchandise.Application.Queries.FindById;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
 
-namespace OzonEdu.Merchandise.Infrastructure.Handlers
+namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
 {
     public class FindMerchOrderByIdQueryHandler : IRequestHandler<FindMerchOrderByIdQuery, MerchOrder>
     {

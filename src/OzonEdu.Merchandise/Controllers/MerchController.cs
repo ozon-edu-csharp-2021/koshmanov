@@ -24,21 +24,21 @@ namespace OzonEdu.Merchandise.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("{id:int}/{merchId:int}")]//
-        public async Task<ActionResult<GetMerchResponse>> GetMerch([FromRoute]int id, [FromRoute]int merchId,
+        [HttpGet("{id:long}/{merchPackId:long}")]//
+        public async Task<ActionResult<GetMerchResponse>> GetMerch([FromRoute]long id, [FromRoute]long merchPackId,
             CancellationToken token)
-        {;
+        {
             CreateMerchOrderCommand createCommand = new CreateMerchOrderCommand()
             {
-                EmloyeeId = id,
-                MerchPackType = merchId
+                EmployeeId = id,
+                MerchPackId = merchPackId
             };
             var result = await _mediator.Send(createCommand);
             return Ok(result);
         }
         
-        [HttpGet("{id:long}")]//
-        public async Task<ActionResult<GetMerchResponse>> GetMerchOrderById([FromRoute]long id,
+        [HttpGet("{id:int}")]//
+        public async Task<ActionResult<GetMerchResponse>> GetMerchOrderById([FromRoute]int id,
             CancellationToken token)
         {
             FindMerchOrderByIdQuery findQuery = new FindMerchOrderByIdQuery()
@@ -59,7 +59,5 @@ namespace OzonEdu.Merchandise.Controllers
             var merch = await _merchService.GetMerchOrderState(request, token);
             return merch;
         }
-        
-        
     }
 }

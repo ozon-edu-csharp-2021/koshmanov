@@ -7,8 +7,8 @@ namespace OzonEdu.Merchandise.Domain.Models
     public abstract class Entity
     {
         int? _requestedHashCode;
-        int _Id;
-        public virtual int Id
+        long _Id;
+        public virtual long Id
         {
             get
             {
@@ -41,7 +41,7 @@ namespace OzonEdu.Merchandise.Domain.Models
 
         public bool IsTransient()
         {
-            return this.Id == default(Int32);
+            return this.Id == default(Int64);
         }
 
         public override bool Equals(object obj)

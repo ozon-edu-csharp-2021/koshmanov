@@ -2,15 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using RestEase.HttpClientFactory;
+using OzonEdu.Merchandise.Application.Contracts;
 using OzonEdu.Merchandise.GrpcServices;
+using OzonEdu.Merchandise.Infrastructure.Configuration.Database;
 using OzonEdu.Merchandise.Infrastructure.Extensions;
 using OzonEdu.Merchandise.Services;
 using OzonEdu.Merchandise.Services.Interfaces;
@@ -20,12 +25,20 @@ namespace OzonEdu.Merchandise
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public IConfiguration Configuration { get; }
+        
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMediatR(typeof(Startup), typeof(DatabaseConnectionOptions));
+            services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
             services.AddSingleton<MerchandiseGrpcService>();
-            services.AddSingleton<IMerchandiseService, MerchandiseService>();
+            services.AddSingleton<IMerchandiseService,MerchandiseService>();
+            services.AddRestEaseClient<IStockItemService>("http://localhost:5005");
+            services.AddSingleton<IStockItemService>();
             services.AddInfrastructure();
         }
         

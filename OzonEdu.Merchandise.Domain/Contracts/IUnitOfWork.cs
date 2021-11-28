@@ -6,7 +6,7 @@ namespace OzonEdu.Merchandise.Domain.Contracts
 {
     public interface IUnitOfWork : IDisposable
     {
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
-        Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken));
+        ValueTask StartTransaction(CancellationToken token);
+        Task SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
     }
 }

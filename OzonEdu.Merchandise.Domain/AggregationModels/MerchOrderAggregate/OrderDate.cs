@@ -1,16 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using OzonEdu.Merchandise.Domain.Models;
 
 namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
 {
-    public class Sku : ValueObject
+    public class OrderDate: ValueObject
     {
-        public long Value { get; }
+        public DateTime Value { get; }
 
-        public Sku(long value)
+        public OrderDate(DateTime value)
         {
             Value = value;
         }
+
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;

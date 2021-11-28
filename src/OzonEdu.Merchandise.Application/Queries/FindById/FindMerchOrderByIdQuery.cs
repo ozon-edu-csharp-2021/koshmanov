@@ -5,6 +5,6 @@ namespace OzonEdu.Merchandise.Application.Queries.FindById
 {
     public class FindMerchOrderByIdQuery:IRequest<MerchOrder>
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -2,10 +2,10 @@
 
 namespace OzonEdu.Merchandise.Application.Commands.CreateMerchOrder
 {
-    public class CreateMerchOrderCommand:IRequest<int>
+    public class CreateMerchOrderCommand:IRequest<long>
     {
-        public int EmloyeeId { get; set; }
-        public string EmloyeeEmail { get; set; }
-        public int MerchPackType { get; set; }
+        public long EmployeeId { get; set; }
+        public string EmployeeEmail { get; set; }
+        public long MerchPackId { get; set; }
     }
 }
