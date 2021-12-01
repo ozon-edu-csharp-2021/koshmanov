@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
+using OpenTracing;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.Merchandise.Domain.Contracts;
@@ -16,15 +17,20 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
         private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory;
         private readonly IChangeTracker _changeTracker;
         private const int Timeout = 5;
+        private readonly ITracer _tracer;
         public IUnitOfWork UnitOfWork { get; }
-        public MerchandiseRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IChangeTracker changeTracker)
+        public MerchandiseRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IChangeTracker changeTracker, ITracer tracer)
         {
             _dbConnectionFactory = dbConnectionFactory;
             _changeTracker = changeTracker;
+            _tracer = tracer;
         }
 
         public async Task<MerchOrder> CreateAsync(MerchOrder merchOrder, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("MerchandiseRepository.CreateAsync")
+                .StartActive();
+            
             string sql = @$"
                 INSERT INTO merch_order ( employee_id, merch_pack_id, status_id, order_date)
                 VALUES ( @EmployeeId, @MerchPackId, @StatusId, @OrderDate) RETURNING id;";
@@ -49,6 +55,9 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
         }
         public async Task<MerchOrder> UpdateAsync(MerchOrder merchOrder, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("MerchandiseRepository.UpdateAsync")
+                .StartActive();
+            
              string sql = @$"
                 UPDATE merch_order
                 SET employee_id = @EmployeeId, merch_pack_id = @MerchPackId, status_id = @StatusId, order_date =@OrderDate
@@ -74,6 +83,9 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
 
         public async Task<OrderState> CheckOrderState(long orderId, CancellationToken cancellationToken = default)
         {
+             using var span = _tracer.BuildSpan("MerchandiseRepository.CheckOrderState")
+                .StartActive();
+            
              string sql=@$"
                         select m.status_id, o.name 
                         from merch_order m inner join order_state o on o.id = m.status_id 
@@ -91,6 +103,9 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
         
         public async Task<MerchOrder> FindById(long orderId, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("MerchandiseRepository.FindById")
+                .StartActive();
+
             string sql=@$"
                         select id, employee_id, merch_id, status_id, order_date
                         from merch_order    
@@ -111,6 +126,9 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
 
         public async Task<bool> CheckEmployeeHaveMerch(long employeeId, long merchPackId, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("MerchandiseRepository.CheckEmployeeHaveMerch")
+                .StartActive();
+            
             string sql=@$"
                         select id, employee_id, merch_id, status_id
                         from merch_order   
@@ -129,6 +147,8 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
         
         public async Task<bool> CheckEmployeeHaveMerchOrders(long employeeId, long merchPackId, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("MerchandiseRepository.CheckEmployeeHaveMerchOrders")
+                .StartActive();
             string sql=@$"
                         select id, employee_id, merch_id, status_id
                         from merch_order   
@@ -146,6 +166,9 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
 
         public async Task<ICollection<MerchOrder>> GetAllEmployeeCompleteOrders(long employeeId, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("MerchandiseRepository.GetAllEmployeeCompleteOrders")
+                .StartActive();
+            
             string sql=@$"
                         select id, employee_id, merch_id, status_id
                         from merch_order   
@@ -167,6 +190,9 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
 
         public async Task<ICollection<MerchOrder>> GetAllEmployeeInProcessOrders(long employeeId, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("MerchandiseRepository.GetAllEmployeeInProcessOrders")
+                .StartActive();
+
             string sql=@$"
                         select id, employee_id, merch_id, status_id, order_date
                         from merch_order   
@@ -189,8 +215,11 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
         }
         
         public async Task<ICollection<MerchOrder>> GetAllEmployeeOrdersInSpecialStatus(long employeeId, IReadOnlyCollection<int> statusList, CancellationToken cancellationToken = default)
-        {
-             string sql=@$"
+        { 
+            using var span = _tracer.BuildSpan("MerchandiseRepository.GetAllEmployeeOrdersInSpecialStatus")
+                .StartActive();
+             
+            string sql=@$"
                         select id, employee_id, merch_id, status_id, order_date
                         from merch_order   
                         where employee_id = @EmployeeId and status_id = any(@StatusList);";

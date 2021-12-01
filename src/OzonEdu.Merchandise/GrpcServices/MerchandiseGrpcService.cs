@@ -2,10 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
+using Microsoft.Extensions.Logging;
+using OpenTracing;
 using OzonEdu.Merchandise.Grpc;
 using OzonEdu.Merchandise.Models;
 using OzonEdu.Merchandise.Services.Interfaces;
 using Employee = OzonEdu.Merchandise.Models.Employee;
+using ILogger = Serilog.ILogger;
 
 namespace OzonEdu.Merchandise.GrpcServices
 {
@@ -13,14 +16,21 @@ namespace OzonEdu.Merchandise.GrpcServices
     {
 
         private readonly IMerchandiseService _merchandiseService;
+        private readonly ILogger<MerchandiseGrpcService> _logger;
+        private readonly ITracer _tracer;
 
-        public MerchandiseGrpcService(IMerchandiseService merchandiseService)
+        public MerchandiseGrpcService(IMerchandiseService merchandiseService, ILogger<MerchandiseGrpcService> logger, ITracer tracer)
         {
             _merchandiseService = merchandiseService;
+            _logger = logger;
+            _tracer = tracer;
         }
 
         public override async Task<GetMerchOrderStateResponseGrpc> GetMerchOrderState(GetMerchOrderStateRequestGrpc request, ServerCallContext context)
         {
+            using var span = _tracer.BuildSpan("GetMerchOrderState")
+                .StartActive();
+            
             GetOrderStateRequest httpRequest = new GetOrderStateRequest(new MerchOrder
                 (1, new List<MerchItem>() {new MerchItem("T-shirt")}));
             

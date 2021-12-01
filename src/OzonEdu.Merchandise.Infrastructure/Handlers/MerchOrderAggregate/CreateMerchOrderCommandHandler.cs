@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using OpenTracing;
 using OzonEdu.Merchandise.Application.Commands.CreateMerchOrder;
 using OzonEdu.Merchandise.Application.Contracts;
 using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
@@ -19,17 +20,23 @@ namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
         private readonly IStockItemService _stockService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateMerchOrderCommandHandler(IMerchOrderRepository mOrderRepository, IMerchPackRepository merchPackRepository,  IEmployeeRepository employeeRepository, IStockItemService stockService, IUnitOfWork unitOfWork)
+        private readonly ITracer _tracer;
+
+        public CreateMerchOrderCommandHandler(IMerchOrderRepository mOrderRepository, IMerchPackRepository merchPackRepository,  IEmployeeRepository employeeRepository, IStockItemService stockService, IUnitOfWork unitOfWork, ITracer tracer)
         {
             _merchOrderRepository = mOrderRepository;
             _merchPackRepository = merchPackRepository;
             _employeeRepository = employeeRepository;
             _stockService = stockService;
             _unitOfWork = unitOfWork;
+            _tracer = tracer;
         }
 
         public async Task<long> Handle(CreateMerchOrderCommand request, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("CreateMerchOrderCommandHandler.Handle")
+                .StartActive();
+            
             await _unitOfWork.StartTransaction(cancellationToken);
             var merchPack = await _merchPackRepository.GetPackByIdAsync(request.MerchPackId, cancellationToken);
             if (merchPack==null)
