@@ -1,14 +1,15 @@
 ﻿using MediatR;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate;
+using OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate;
 
 namespace OzonEdu.Merchandise.Domain.Events
 {
-    public class OrderStateChangedToGiveOutEvent:INotification
+    public sealed record OrderStateChangedToGiveOutEvent:INotification
     {
-        public OrderStateChangedToGiveOutEvent(MerchOrder merchOrder)
-        {
-            MerchOrder = merchOrder;
-        }
-        public MerchOrder MerchOrder { get; }
+        public PackId MerchPackId { get; init; }
+
+        public OrderState NewState { get; init; }
+
+        public EmployeeId EmployeeId { get; init; }
     }
 }

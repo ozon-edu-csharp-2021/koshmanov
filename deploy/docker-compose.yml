@@ -68,13 +68,17 @@ services:
   stock-api:
     image: 'ghcr.io/ozon-edu-csharp-2021/stock-api:main'
     hostname: 'stock-api'
+    ports:
+    - "5070:80"
+    - "5072:82"
     networks:
       - ozon-network
-    ports:
-      - "5070:5000"
-      - "5072:5002"
     environment:
       DatabaseConnectionOptions__ConnectionString: "Host=stock-api-db;Port=5432;Database=stock-api;Username=postgres;Password=stockApiPassword"
+      BootstrapServers: "broker:29092"
+      topic: "stock_replenished_event"
+      groupId: "stock-api-service"
+      SupplyApiGrpcServiceConfiguration__ServerAddress: "http://localhost:5082"
     depends_on:
       - stock-api-db
       - redis

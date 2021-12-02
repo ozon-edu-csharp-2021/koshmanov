@@ -67,8 +67,7 @@ namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
             var newMerchOrder = MerchOrder.Create(new EmployeeId(employee.Id), new PackId(merchPack.Id), new OrderDate(DateTime.Now)); 
             await _merchOrderRepository.CreateAsync(newMerchOrder, cancellationToken);
             
-            //обращение к сток апи сервису с проверкой наличия мерчпака на складе
-            var res = _stockService.CheckMerchPackExist(merchPack).Result;
+            var res = await _stockService.CheckMerchPackExist(merchPack);
             //если етсь ставим в прогресс и отправляем уведомление на почту иначе резервируем и ставим статус в ожидание
             if (res)
             {

@@ -88,7 +88,12 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchOrderAggregate
             if (CurrentOrderState.Equals(OrderState.InProgress))
             {
                 CurrentOrderState = OrderState.GiveOut;
-                AddDomainEvent(new OrderStateChangedToGiveOutEvent(this));
+                AddDomainEvent(new OrderStateChangedToGiveOutEvent
+                {
+                    MerchPackId = MerchPackId,
+                    NewState = CurrentOrderState,
+                    EmployeeId = EmployeeId
+                });
             }
             else
             {
