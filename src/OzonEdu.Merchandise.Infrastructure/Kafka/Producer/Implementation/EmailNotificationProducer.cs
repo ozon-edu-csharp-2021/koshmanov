@@ -14,7 +14,7 @@ namespace OzonEdu.Merchandise.Infrastructure.Kafka.Producer.Implementation
             _producer = producer;
         }
 
-       // 5. При успешной выдаче мерча - отправлять событие NotificationEvent в топик "email_notification_event"
+        // 5. При успешной выдаче мерча - отправлять событие NotificationEvent в топик "email_notification_event"
         public void Publish(NotificationEvent notificationEvent)
         {
             var message = new Message<string, NotificationEvent>();

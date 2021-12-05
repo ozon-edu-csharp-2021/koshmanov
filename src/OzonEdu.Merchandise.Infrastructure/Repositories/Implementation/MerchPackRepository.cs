@@ -75,5 +75,23 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
             var resSkus = result.Select(x => new Sku( x.Sku)).ToList();
             return  MerchPack.Create(packId, resSkus, MerchPackType.Parse(packTypeId));
         }
+
+        public async Task<ICollection<int>> GetPackTypeByEventIdAsync(long eventId, CancellationToken token)
+        {
+            using var span = _tracer.BuildSpan("MerchPackRepository.GetPackTypeByEventIdAsync")
+                .StartActive();
+            string sql=@$"
+                        select merch_pack_id
+                        from merch_pack_type_employee_event_map    
+                        where employee_event = @EventId";
+            var connection = await _dbConnectionFactory.CreateConnection(token);
+            var result = await connection.QueryAsync<Models.MerchTypeDto>(sql, 
+                new
+                {
+                    EventId=eventId   
+                });
+            
+            return result.Select(x =>  x.Id).ToList();
+        }
     }
 }

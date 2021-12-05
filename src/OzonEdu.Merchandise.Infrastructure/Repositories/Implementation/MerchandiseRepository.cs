@@ -214,7 +214,7 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
             return merchOrderList;
         }
         
-        public async Task<ICollection<MerchOrder>> GetAllEmployeeOrdersInSpecialStatus(long employeeId, IReadOnlyCollection<int> statusList, CancellationToken cancellationToken = default)
+        public async Task<ICollection<MerchOrder>> GetAllEmployeeOrdersInSpecialStatus(IReadOnlyCollection<int> statusList, CancellationToken cancellationToken = default)
         { 
             using var span = _tracer.BuildSpan("MerchandiseRepository.GetAllEmployeeOrdersInSpecialStatus")
                 .StartActive();
@@ -222,11 +222,10 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
             string sql=@$"
                         select id, employee_id, merch_id, status_id, order_date
                         from merch_order   
-                        where employee_id = @EmployeeId and status_id = any(@StatusList);";
+                        where and status_id = any(@StatusList);";
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
             var result = await connection.QueryAsync<Models.MerchOrderDto>(sql, new
             {
-                EmployeeId = employeeId,
                 StatusList = statusList
             });
             var merchOrderList = result.Select(x => MerchOrder.Create(x.OrderId,

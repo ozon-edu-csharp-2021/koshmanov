@@ -67,10 +67,10 @@ namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
             var newMerchOrder = MerchOrder.Create(new EmployeeId(employee.Id), new PackId(merchPack.Id), new OrderDate(DateTime.Now)); 
             await _merchOrderRepository.CreateAsync(newMerchOrder, cancellationToken);
             
-            var res = await _stockService.CheckMerchPackExist(merchPack);
+           var res = await _stockService.CheckMerchPackExist(merchPack);
             //если етсь ставим в прогресс и отправляем уведомление на почту иначе резервируем и ставим статус в ожидание
             if (res)
-            {
+            { 
                 newMerchOrder.SetInProgressStatus();
                 await _stockService.GetStockItem(merchPack);
                 //отправка уведомления сотруднику

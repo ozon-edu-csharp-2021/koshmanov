@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Confluent.Kafka;
+using CSharpCourse.Core.Lib.Enums;
 using CSharpCourse.Core.Lib.Events;
 using MediatR;
 using Microsoft.Extensions.Hosting;
@@ -46,20 +47,16 @@ namespace OzonEdu.Merchandise.Infrastructure.Kafka.Consumer.Implementation
                             serializer.Deserialize(data, false, SerializationContext.Empty);
                         var createMerchCommand = new CreateMerchOrderCommand
                         {
-                            //EmployeeId = message,
-                            EmployeeEmail = message.EmployeeEmail
-                            //MerchPackId = message.Payload
+                            EmployeeName = message.EmployeeName,
+                            EmployeeEmail = message.EmployeeEmail,
+                            EmployeeEventType = (int)message.EventType
                         };
                         await _mediator.Send(createMerchCommand, stoppingToken);
                     }
-                    
-                 
                 }
-
                 _consumer.Commit();
             }
             _consumer.Unsubscribe();
-            //return Task.CompletedTask;
         }
     }
 }
