@@ -6,7 +6,7 @@ namespace OzonEdu.Merchandise.Application.Commands.RecreateMerchOrder
 {
     public class RecreateMerchOrderCommand:IRequest<List<long>>
     {
-        public IReadOnlyCollection<StockReplenishedItem> Items { get; set; }
+        public ICollection<StockReplenishedItem> Items { get; set; }
         
     }
     public class StockReplenishedItem

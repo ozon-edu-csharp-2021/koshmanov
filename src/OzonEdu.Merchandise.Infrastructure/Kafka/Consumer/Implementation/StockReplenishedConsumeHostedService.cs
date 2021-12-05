@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,7 +28,6 @@ namespace OzonEdu.Merchandise.Infrastructure.Kafka.Consumer.Implementation
         
         /*3. Прослушивать топик "stock_replenished_event" на предмет наличия сообщения типа StockReplenishedEvent. 
 При его наличии сообщения, проанализировать очередь людей на выдачу, и сделать повторный запрос на выдачу*/
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await Task.Yield();
@@ -47,15 +47,18 @@ namespace OzonEdu.Merchandise.Infrastructure.Kafka.Consumer.Implementation
 
                         var message =
                             serializer.Deserialize(data, false, SerializationContext.Empty);
-                        var recreateMerchCommand = new RecreateMerchOrderCommand
+                        var recreateMerchCommand = new RecreateMerchOrderCommand {Items = new List<StockReplenishedItem>()};
+                        message.Type.ToList().ForEach(x =>
                         {
-                            Items = new List<StockReplenishedItem>
-                            {
-                                message.Type.Select(x=>x).ToList()
-                            }
-                            
-                            
-                        };
+                            recreateMerchCommand.Items.Add(
+                                new StockReplenishedItem()
+                                {
+                                    Sku = x.Sku,
+                                    ClothingSize = x.ClothingSize,
+                                    ItemTypeId = x.ItemTypeId,
+                                    ItemTypeName = x.ItemTypeName
+                                });
+                        });
                         await _mediator.Send(recreateMerchCommand, stoppingToken);
                     }
                 }
