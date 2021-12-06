@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OzonEdu.Merchandise.Infrastructure;
 using OzonEdu.Merchandise.Infrastructure.Extensions;
+using Serilog;
 
 namespace OzonEdu.Merchandise
 {
@@ -20,6 +21,9 @@ namespace OzonEdu.Merchandise
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog((context, configuration)=> configuration
+                        .ReadFrom.Configuration(context.Configuration)
+                        .WriteTo.Console())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

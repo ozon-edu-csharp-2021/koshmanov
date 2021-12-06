@@ -15,6 +15,7 @@ namespace OzonEdu.Merchandise.Infrastructure.Filters
                 app.Map("/ready", builder => builder.UseMiddleware<CheckReadyMiddleware>());
                 app.Map("/live", builder => builder.UseMiddleware<CheckLiveMiddleware>());
                 app.UseMiddleware<RequestLoggingMiddleware>();
+                app.UseMiddleware<GlobalTraceMiddleware>();
                 //app.UseMiddleware<ResponseLoggingMiddleware>();
                 next(app);
             };

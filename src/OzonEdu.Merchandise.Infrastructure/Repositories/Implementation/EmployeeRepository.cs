@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
+using OpenTracing;
 using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.Merchandise.Domain.Contracts;
 using OzonEdu.Merchandise.Infrastructure.Repositories.Infrastructure.Interfaces;
@@ -14,17 +15,21 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
         private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory;
         private readonly IChangeTracker _changeTracker;
         private const int Timeout = 5;
+        private readonly ITracer _tracer;
         public IUnitOfWork UnitOfWork { get; }
 
         public EmployeeRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory,
-            IChangeTracker changeTracker)
+            IChangeTracker changeTracker, ITracer tracer)
         {
             _dbConnectionFactory = dbConnectionFactory;
             _changeTracker = changeTracker;
+            _tracer = tracer;
         }
 
         public async Task<Employee> CreateAsync(Employee employee, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("EmployeeRepository.CreateAsync")
+                .StartActive();
             string sql = @$"
                 INSERT INTO employee ( email)
                 VALUES (  @Email) RETURNING id;";
@@ -46,6 +51,8 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
 
         public async Task<Employee> UpdateAsync(Employee employee, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("EmployeeRepository.UpdateAsync")
+                .StartActive();
             string sql = @$"
                 UPDATE employee
                 SET email = @Email
@@ -69,6 +76,8 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
 
         public async Task<Employee> FindByIdAsync(long id, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("EmployeeRepository.FindByIdAsync")
+                .StartActive();
             string sql=@$"
                         select id, email
                         from employee    

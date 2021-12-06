@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
+using OpenTracing;
 using OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.Merchandise.Domain.Contracts;
 using OzonEdu.Merchandise.Infrastructure.Repositories.Infrastructure.Interfaces;
@@ -15,16 +16,20 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
         private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory;
         private readonly IChangeTracker _changeTracker;
         private const int Timeout = 5;
+        private readonly ITracer _tracer;
         public IUnitOfWork UnitOfWork { get; }
         
-        public MerchPackRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IChangeTracker changeTracker)
+        public MerchPackRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IChangeTracker changeTracker, ITracer tracer)
         {
             _dbConnectionFactory = dbConnectionFactory;
             _changeTracker = changeTracker;
+            _tracer = tracer;
         }
 
         public async Task<ICollection<MerchPack>> GetPackListByMerchTypeIdAsync(int merchPackTypeId, CancellationToken cancellationToken=default)
         {
+            using var span = _tracer.BuildSpan("MerchPackRepository.GetPackListByMerchTypeIdAsync")
+                .StartActive();
             string sql=@$"
                         select merch_pack_id, sku, type_id
                         from merch_pack_sku_map    
@@ -53,6 +58,8 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
 
         public async Task<MerchPack> GetPackByIdAsync(long packId, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("MerchPackRepository.GetPackByIdAsync")
+                .StartActive();
             string sql=@$"
                         select merch_pack_id, sku, type_id
                         from merch_pack_sku_map    
@@ -67,6 +74,24 @@ namespace OzonEdu.Merchandise.Infrastructure.Repositories.Implementation
             var packTypeId = result.First().PackType;
             var resSkus = result.Select(x => new Sku( x.Sku)).ToList();
             return  MerchPack.Create(packId, resSkus, MerchPackType.Parse(packTypeId));
+        }
+
+        public async Task<ICollection<int>> GetPackTypeByEventIdAsync(long eventId, CancellationToken token)
+        {
+            using var span = _tracer.BuildSpan("MerchPackRepository.GetPackTypeByEventIdAsync")
+                .StartActive();
+            string sql=@$"
+                        select merch_pack_id
+                        from merch_pack_type_employee_event_map    
+                        where employee_event = @EventId";
+            var connection = await _dbConnectionFactory.CreateConnection(token);
+            var result = await connection.QueryAsync<Models.MerchTypeDto>(sql, 
+                new
+                {
+                    EventId=eventId   
+                });
+            
+            return result.Select(x =>  x.Id).ToList();
         }
     }
 }

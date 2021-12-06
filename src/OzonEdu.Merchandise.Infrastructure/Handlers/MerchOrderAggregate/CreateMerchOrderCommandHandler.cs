@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using OpenTracing;
 using OzonEdu.Merchandise.Application.Commands.CreateMerchOrder;
 using OzonEdu.Merchandise.Application.Contracts;
 using OzonEdu.Merchandise.Domain.AggregationModels.EmployeeAggregate;
@@ -19,17 +20,23 @@ namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
         private readonly IStockItemService _stockService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateMerchOrderCommandHandler(IMerchOrderRepository mOrderRepository, IMerchPackRepository merchPackRepository,  IEmployeeRepository employeeRepository, IStockItemService stockService, IUnitOfWork unitOfWork)
+        private readonly ITracer _tracer;
+
+        public CreateMerchOrderCommandHandler(IMerchOrderRepository mOrderRepository, IMerchPackRepository merchPackRepository,  IEmployeeRepository employeeRepository, IStockItemService stockService, IUnitOfWork unitOfWork, ITracer tracer)
         {
             _merchOrderRepository = mOrderRepository;
             _merchPackRepository = merchPackRepository;
             _employeeRepository = employeeRepository;
             _stockService = stockService;
             _unitOfWork = unitOfWork;
+            _tracer = tracer;
         }
 
         public async Task<long> Handle(CreateMerchOrderCommand request, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("CreateMerchOrderCommandHandler.Handle")
+                .StartActive();
+            
             await _unitOfWork.StartTransaction(cancellationToken);
             var merchPack = await _merchPackRepository.GetPackByIdAsync(request.MerchPackId, cancellationToken);
             if (merchPack==null)
@@ -60,11 +67,10 @@ namespace OzonEdu.Merchandise.Infrastructure.Handlers.MerchOrderAggregate
             var newMerchOrder = MerchOrder.Create(new EmployeeId(employee.Id), new PackId(merchPack.Id), new OrderDate(DateTime.Now)); 
             await _merchOrderRepository.CreateAsync(newMerchOrder, cancellationToken);
             
-            //обращение к сток апи сервису с проверкой наличия мерчпака на складе
-            var res = _stockService.CheckMerchPackExist(merchPack).Result;
+           var res = await _stockService.CheckMerchPackExist(merchPack);
             //если етсь ставим в прогресс и отправляем уведомление на почту иначе резервируем и ставим статус в ожидание
             if (res)
-            {
+            { 
                 newMerchOrder.SetInProgressStatus();
                 await _stockService.GetStockItem(merchPack);
                 //отправка уведомления сотруднику

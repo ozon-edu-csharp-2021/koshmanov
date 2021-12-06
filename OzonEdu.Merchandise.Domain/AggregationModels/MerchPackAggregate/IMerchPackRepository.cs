@@ -8,5 +8,6 @@ namespace OzonEdu.Merchandise.Domain.AggregationModels.MerchPackAggregate
     {
         Task<ICollection<MerchPack>> GetPackListByMerchTypeIdAsync(int merchPackTypeId, CancellationToken token);
         Task<MerchPack> GetPackByIdAsync(long id, CancellationToken token);
+        Task<ICollection<int>> GetPackTypeByEventIdAsync(long id, CancellationToken token);
     }
 }

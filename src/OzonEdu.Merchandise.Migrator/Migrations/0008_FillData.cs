@@ -16,6 +16,14 @@ namespace OzonEdu.Merchandise.Migrator.Migrations
                        (50, 'VeteranPack');             
                 ");
             Execute.Sql(@"
+                INSERT INTO merch_pack_type_employee_event_map (merch_pack_type_id, employee_event)
+                VALUES (10, 100),             
+                       (20, 300),  
+                       (30, 300), 
+                       (40, 200),
+                       (50, 1000);             
+                ");
+            Execute.Sql(@"
                 INSERT INTO merch_pack_sku_map ( merch_pack_id, sku, type_id)
                 VALUES /*Starter 1 - 6;41, 42, 43 (id:1-6)*/
                        (1, 1, 10),             
